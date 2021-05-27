@@ -4,23 +4,26 @@ import React from 'react';
 interface FallingItemProps {
   offsetX: number;
   offsetY: number;
+  size: number;
 }
 
-const MIN_ITEM_SIZE = 30;
+const MIN_ITEM_SIZE = 25;
+const MIN_ITEM_SIZE_INCREMENT = 5;
+const MAX_ITEM_WEIGHT = 9;
 
-const FallingItemContainer = styled.div<FallingItemProps>`
+const FallingItemContainerDiv = styled.div<FallingItemProps>`
   position: absolute;
-  top: ${(props) => (props.offsetY ? `${props.offsetY}px` : '0')};
-  left: ${(props) => (props.offsetX ? `${props.offsetX}px` : '0')};
+  top: ${(props) => `${props.offsetY}px`};
+  left: ${(props) => `${props.offsetX}px`};
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${MIN_ITEM_SIZE}px;
-  height: ${MIN_ITEM_SIZE}px;
+  width: ${(props) => `${props.size}px`};
+  height: ${(props) => `${props.size}px`};
 `;
 
-const SquareItem = styled.div`
+const SquareItemDiv = styled.div`
   width: 100%;
   height: 100%;
   background: gray;
@@ -29,20 +32,22 @@ const SquareItem = styled.div`
   align-items: center;
 `;
 
-const CircleItem = styled(SquareItem)`
+const CircleItemDiv = styled(SquareItemDiv)`
   border-radius: 50%;
 `;
 
-const TriangleItem = styled.div`
+const TriangleItemDiv = styled.div<{ size: number }>`
   width: 0;
   height: 0;
-  border-left: ${MIN_ITEM_SIZE / 2}px solid transparent;
-  border-right: ${MIN_ITEM_SIZE / 2}px solid transparent;
-  border-bottom: ${MIN_ITEM_SIZE}px solid gray;
+  border-left: ${(props) => `${props.size / 2}px`} solid transparent;
+  border-right: ${(props) => `${props.size / 2}px`} solid transparent;
+  border-bottom: ${(props) => `${props.size}px`} solid gray;
 
   span {
     position: absolute;
-    top: 50%;
+    // Number centered in triangle does not look centered
+    // precisely. Make it look centered by increasing the top for now.
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
@@ -52,20 +57,26 @@ const getRandomFallingItem = (fallingItemList: JSX.Element[]): JSX.Element => {
   return fallingItemList[Math.floor(Math.random() * fallingItemList.length)];
 };
 
+const getRandomItemWeight = (max: number) => {
+  return Math.floor(Math.random() * max + 1);
+};
+
 export const ItemView = () => {
-  let weight = 5;
+  let weight = getRandomItemWeight(MAX_ITEM_WEIGHT);
   const weightIndicator = <span>{weight}</span>;
+  const fallingItemSize = MIN_ITEM_SIZE + MIN_ITEM_SIZE_INCREMENT * weight;
+
   // Only one of them should be falling at a time.
   const possibleFallingItems = [
-    <TriangleItem>{weightIndicator}</TriangleItem>,
-    <CircleItem>{weightIndicator}</CircleItem>,
-    <SquareItem>{weightIndicator}</SquareItem>,
+    <TriangleItemDiv size={fallingItemSize}>{weightIndicator}</TriangleItemDiv>,
+    <CircleItemDiv>{weightIndicator}</CircleItemDiv>,
+    <SquareItemDiv>{weightIndicator}</SquareItemDiv>,
   ];
 
   return (
-    <FallingItemContainer offsetX={30} offsetY={30}>
+    <FallingItemContainerDiv offsetX={30} offsetY={30} size={fallingItemSize}>
       {getRandomFallingItem(possibleFallingItems)}
-    </FallingItemContainer>
+    </FallingItemContainerDiv>
   );
 };
 

@@ -1,2 +1,0 @@
-export const FALLING_START = 'FALLING_START';
-export const FALLING_COMPLETE = 'FALLING_COMPLETE';

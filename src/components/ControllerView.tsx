@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useAppDispatch } from '../redux/hooks';
-import { startNewGame } from '../redux/reducer';
+import { startNewGame, stopCurrentGame } from '../redux/reducer';
 
 const ControllerContainer = styled.div`
   display: flex;
@@ -18,14 +18,13 @@ const ControlButton = styled.button`
 
 export const ControllerView = () => {
   const dispatch = useAppDispatch();
-  const invokeNewGame = () => {
-    console.log('im called');
-    return dispatch(startNewGame());
-  };
+  const invokeNewGame = () => dispatch(startNewGame());
+  const stopGame = () => dispatch(stopCurrentGame());
+
   return (
     <ControllerContainer>
       <ControlButton onClick={invokeNewGame}>New game</ControlButton>
-      <ControlButton>Stop</ControlButton>
+      <ControlButton onClick={stopGame}>Stop</ControlButton>
     </ControllerContainer>
   );
 };

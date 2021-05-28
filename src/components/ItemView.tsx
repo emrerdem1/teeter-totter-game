@@ -41,12 +41,14 @@ const CircleItemDiv = styled(SquareItemDiv)`
   border-radius: 50%;
 `;
 
-const TriangleItemDiv = styled.div<{ size: number }>`
+const TriangleItemDiv = styled.div<{ scaleSize: number }>`
   width: 0;
   height: 0;
-  border-left: ${(props) => `${props.size / 2}px`} solid transparent;
-  border-right: ${(props) => `${props.size / 2}px`} solid transparent;
-  border-bottom: ${(props) => `${props.size}px`} solid #${getRandomHexColor()};
+  border-left: ${(props) => (props.scaleSize * MAX_ITEM_SIZE) / 2}px solid
+    transparent;
+  border-right: ${(props) => (props.scaleSize * MAX_ITEM_SIZE) / 2}px solid
+    transparent;
+  border-bottom: ${(props) => props.scaleSize * MAX_ITEM_SIZE}px solid #${getRandomHexColor()};
 
   span {
     position: absolute;
@@ -66,7 +68,6 @@ export const ItemView: React.FC<FallingItem> = ({
   itemShape,
 }) => {
   const weightIndicatorText = <span>{weight}</span>;
-  const fallingItemSize = weight;
 
   const getItemDivBasedOnShape = (shape: FallingItemShape) => {
     switch (shape) {
@@ -76,7 +77,7 @@ export const ItemView: React.FC<FallingItem> = ({
         return <SquareItemDiv>{weightIndicatorText}</SquareItemDiv>;
       case FallingItemShape.triangle:
         return (
-          <TriangleItemDiv size={MAX_ITEM_SIZE}>
+          <TriangleItemDiv scaleSize={scaleSize}>
             {weightIndicatorText}
           </TriangleItemDiv>
         );

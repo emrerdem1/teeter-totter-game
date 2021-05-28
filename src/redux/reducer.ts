@@ -1,6 +1,4 @@
-import { combineReducers, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as actionTypes from './actionTypes';
-import { ActionType } from 'typesafe-actions';
+import { combineReducers, createSlice } from '@reduxjs/toolkit';
 import {
   getRandomItemWeight,
   getRandomFallingItemShape,
@@ -60,7 +58,6 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     startNewGame: (state) => {
-      console.log('im here');
       const humanItemWeight = getRandomItemWeight();
       const machineItemWeight = getRandomItemWeight();
       state.isStarted = true;
@@ -85,13 +82,14 @@ const gameSlice = createSlice({
       };
     },
     proceedNextRound: (state) => {},
-    stopGame: (state) => {},
+    stopCurrentGame: (state) => {
+      return state;
+    },
   },
 });
 
 export const { actions, reducer } = gameSlice;
-export type GameActionType = typeof actions;
-export const { startNewGame } = actions;
+export const { startNewGame, stopCurrentGame } = actions;
 
 export const selectGame = (state: RootState) => state.gameSlice;
 

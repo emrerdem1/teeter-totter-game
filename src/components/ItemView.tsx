@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { FallingItem, FallingItemShape } from '../redux/reducer';
 import { MAX_ITEM_SIZE } from '../redux/utils';
 
 // https://stackoverflow.com/a/25821830
@@ -8,13 +9,13 @@ const getRandomHexColor = () =>
     .toString(16)
     .padStart(6, '0');
 
-interface FallingItemProps {
+interface FallingItemContainerProps {
   offsetX: number;
   offsetY: number;
   scaleSize: number;
 }
 
-const FallingItemContainerDiv = styled.div<FallingItemProps>`
+const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   position: absolute;
   top: ${(props) => `${props.offsetY}px`};
   left: ${(props) => `${props.offsetX}px`};
@@ -24,7 +25,7 @@ const FallingItemContainerDiv = styled.div<FallingItemProps>`
   align-items: center;
   width: ${MAX_ITEM_SIZE}px;
   height: ${MAX_ITEM_SIZE}px;
-  transform: scale(${(props) => `${props.scaleSize}px`});
+  transform: scale(${(props) => props.scaleSize});
 `;
 
 const SquareItemDiv = styled.div`
@@ -57,24 +58,39 @@ const TriangleItemDiv = styled.div<{ size: number }>`
   }
 `;
 
-export const ItemView = () => {
-  let weight = 5;
-  const weightIndicator = <span>{weight}</span>;
+export const ItemView: React.FC<FallingItem> = ({
+  weight,
+  scaleSize,
+  offsetX,
+  offsetY,
+  itemShape,
+}) => {
+  const weightIndicatorText = <span>{weight}</span>;
   const fallingItemSize = weight;
 
-  // Only one of them should be falling at a time.
-  const possibleFallingItems = [
-    <TriangleItemDiv size={30}>{weightIndicator}</TriangleItemDiv>,
-    <CircleItemDiv>{weightIndicator}</CircleItemDiv>,
-    <SquareItemDiv>{weightIndicator}</SquareItemDiv>,
-  ];
+  const getItemDivBasedOnShape = (shape: FallingItemShape) => {
+    switch (shape) {
+      case FallingItemShape.circle:
+        return <CircleItemDiv>{weightIndicatorText}</CircleItemDiv>;
+      case FallingItemShape.rectangle:
+        return <SquareItemDiv>{weightIndicatorText}</SquareItemDiv>;
+      case FallingItemShape.triangle:
+        return (
+          <TriangleItemDiv size={MAX_ITEM_SIZE}>
+            {weightIndicatorText}
+          </TriangleItemDiv>
+        );
+    }
+  };
 
   return (
     <FallingItemContainerDiv
-      offsetX={30}
-      offsetY={30}
-      scaleSize={fallingItemSize}
-    ></FallingItemContainerDiv>
+      offsetX={offsetX}
+      offsetY={offsetY}
+      scaleSize={scaleSize}
+    >
+      {getItemDivBasedOnShape(itemShape)}
+    </FallingItemContainerDiv>
   );
 };
 

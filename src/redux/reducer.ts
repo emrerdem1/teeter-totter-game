@@ -18,7 +18,7 @@ export enum FallingItemShape {
   rectangle,
 }
 
-interface FallingItem {
+export interface FallingItem {
   id: string;
   weight: number;
   // Depends on the weight.
@@ -55,16 +55,16 @@ const initialState: GameState = {
   ongoingItems: null,
   doneItems: null,
 };
-
-export const gameSlice = createSlice({
+const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
     startNewGame: (state) => {
+      console.log('im here');
       const humanItemWeight = getRandomItemWeight();
       const machineItemWeight = getRandomItemWeight();
-
       state.isStarted = true;
+
       state.ongoingItems = {
         human: {
           id: uuid(),
@@ -84,13 +84,16 @@ export const gameSlice = createSlice({
         },
       };
     },
+    proceedNextRound: (state) => {},
+    stopGame: (state) => {},
   },
 });
 
-export const { startNewGame } = gameSlice.actions;
+export const { actions, reducer } = gameSlice;
+export type GameActionType = typeof actions;
+export const { startNewGame } = actions;
 
-const rootReducer = combineReducers<RootState, any>({
-  gameStatus: gameSlice,
-});
+export const selectGame = (state: RootState) => state.gameSlice;
 
+const rootReducer = combineReducers({ gameSlice: reducer });
 export default rootReducer;

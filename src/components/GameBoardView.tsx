@@ -1,13 +1,17 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { useAppSelector } from '../redux/hooks';
+import { selectGame } from '../redux/reducer';
+import { HORIZONTAL_CELLS_COUNT, MAX_ITEM_SIZE } from '../redux/utils';
 import ItemView from './ItemView';
 
 const TOTTER_LINE_HEIGHT = 5;
 const TOTTER_BALANCER_HEIGHT = 100;
+const BOARD_WIDTH = MAX_ITEM_SIZE * HORIZONTAL_CELLS_COUNT * 2;
 
 const GameBoardDiv = styled.div`
-  width: 100%;
-  height: 300px;
+  width: ${BOARD_WIDTH}px;
+  height: ${BOARD_WIDTH}px;
   display: flex;
   position: relative;
   flex-wrap: wrap;
@@ -43,10 +47,11 @@ const ItemViewContainerDiv = styled.div`
 `;
 
 const GameBoardView = () => {
+  const { isFinished, shouldProceedNextRound, ongoingItems, doneItems } =
+    useAppSelector(selectGame);
   const fieldRef = React.useRef<HTMLDivElement>(null);
 
   React.useLayoutEffect(() => {
-    console.log(fieldRef);
     if (fieldRef && fieldRef.current) {
       console.log('Width ' + fieldRef.current.offsetWidth);
       console.log('Height ' + fieldRef.current.offsetHeight);
@@ -56,7 +61,16 @@ const GameBoardView = () => {
   return (
     <GameBoardDiv ref={fieldRef}>
       <ItemViewContainerDiv>
-        <ItemView />
+        {ongoingItems && (
+          <ItemView
+            id={ongoingItems.human.id}
+            weight={ongoingItems.human.weight}
+            scaleSize={ongoingItems.human.scaleSize}
+            offsetX={ongoingItems.human.offsetX}
+            offsetY={ongoingItems.human.offsetY}
+            itemShape={ongoingItems.human.itemShape}
+          />
+        )}
       </ItemViewContainerDiv>
       <TotterBaseDiv>
         <TotterLineDiv></TotterLineDiv>

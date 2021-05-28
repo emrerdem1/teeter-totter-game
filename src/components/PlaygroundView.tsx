@@ -8,6 +8,7 @@ const ScreenDiv = styled.div`
   flex-wrap: wrap;
   width: 700px;
   height: 600px;
+  justify-content: center;
 `;
 
 export const PlaygroundView: React.FC = () => {

@@ -1,15 +1,18 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { MAX_ITEM_SIZE } from '../redux/utils';
+
+// https://stackoverflow.com/a/25821830
+const getRandomHexColor = () =>
+  Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, '0');
 
 interface FallingItemProps {
   offsetX: number;
   offsetY: number;
-  size: number;
+  scaleSize: number;
 }
-
-const MIN_ITEM_SIZE = 25;
-const MIN_ITEM_SIZE_INCREMENT = 5;
-const MAX_ITEM_WEIGHT = 9;
 
 const FallingItemContainerDiv = styled.div<FallingItemProps>`
   position: absolute;
@@ -19,14 +22,15 @@ const FallingItemContainerDiv = styled.div<FallingItemProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${(props) => `${props.size}px`};
-  height: ${(props) => `${props.size}px`};
+  width: ${MAX_ITEM_SIZE}px;
+  height: ${MAX_ITEM_SIZE}px;
+  transform: scale(${(props) => `${props.scaleSize}px`});
 `;
 
 const SquareItemDiv = styled.div`
   width: 100%;
   height: 100%;
-  background: gray;
+  background: #${getRandomHexColor()};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +45,7 @@ const TriangleItemDiv = styled.div<{ size: number }>`
   height: 0;
   border-left: ${(props) => `${props.size / 2}px`} solid transparent;
   border-right: ${(props) => `${props.size / 2}px`} solid transparent;
-  border-bottom: ${(props) => `${props.size}px`} solid gray;
+  border-bottom: ${(props) => `${props.size}px`} solid #${getRandomHexColor()};
 
   span {
     position: absolute;
@@ -53,30 +57,24 @@ const TriangleItemDiv = styled.div<{ size: number }>`
   }
 `;
 
-const getRandomFallingItem = (fallingItemList: JSX.Element[]): JSX.Element => {
-  return fallingItemList[Math.floor(Math.random() * fallingItemList.length)];
-};
-
-const getRandomItemWeight = (max: number) => {
-  return Math.floor(Math.random() * max + 1);
-};
-
 export const ItemView = () => {
-  let weight = getRandomItemWeight(MAX_ITEM_WEIGHT);
+  let weight = 5;
   const weightIndicator = <span>{weight}</span>;
-  const fallingItemSize = MIN_ITEM_SIZE + MIN_ITEM_SIZE_INCREMENT * weight;
+  const fallingItemSize = weight;
 
   // Only one of them should be falling at a time.
   const possibleFallingItems = [
-    <TriangleItemDiv size={fallingItemSize}>{weightIndicator}</TriangleItemDiv>,
+    <TriangleItemDiv size={30}>{weightIndicator}</TriangleItemDiv>,
     <CircleItemDiv>{weightIndicator}</CircleItemDiv>,
     <SquareItemDiv>{weightIndicator}</SquareItemDiv>,
   ];
 
   return (
-    <FallingItemContainerDiv offsetX={30} offsetY={30} size={fallingItemSize}>
-      {getRandomFallingItem(possibleFallingItems)}
-    </FallingItemContainerDiv>
+    <FallingItemContainerDiv
+      offsetX={30}
+      offsetY={30}
+      scaleSize={fallingItemSize}
+    ></FallingItemContainerDiv>
   );
 };
 

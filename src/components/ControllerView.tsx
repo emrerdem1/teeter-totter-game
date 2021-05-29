@@ -6,7 +6,7 @@ import {
   startNewGame,
   stopCurrentGame,
   continueCurrentGame,
-  humanMove,
+  move,
   MoveDirection,
 } from '../redux/reducer';
 
@@ -41,7 +41,7 @@ export const ControllerView = () => {
       <ControlButton onClick={handleGameFlow}>
         {isStopped ? 'Continue' : 'Stop'}
       </ControlButton>
-      <ControlButton onClick={() => dispatch(humanMove(MoveDirection.right))}>
+      <ControlButton onClick={() => dispatch(move(MoveDirection.right))}>
         Move right
       </ControlButton>
     </ControllerContainer>

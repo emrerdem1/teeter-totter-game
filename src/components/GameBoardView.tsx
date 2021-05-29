@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useAppSelector } from '../redux/hooks';
-import { selectGame } from '../redux/reducer';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { move, MoveDirection, selectGame } from '../redux/reducer';
 import {
   HORIZONTAL_CELLS_COUNT,
   VERTICAL_CELLS_COUNT,
@@ -53,17 +53,24 @@ const ItemViewContainerDiv = styled.div`
 `;
 
 const GameBoardView = () => {
-  const { isFinished, shouldProceedNextRound, ongoingItems, doneItems } =
-    useAppSelector(selectGame);
+  const {
+    isStarted,
+    isFinished,
+    shouldProceedNextRound,
+    ongoingItems,
+    doneItems,
+  } = useAppSelector(selectGame);
+  const dispatch = useAppDispatch();
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const fallingItemContainerRef = React.useRef<HTMLDivElement>(null);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (fieldRef && fieldRef.current) {
-      /*console.log('Width ' + fieldRef.current.offsetWidth);
-      console.log('Height ' + fieldRef.current.offsetHeight);*/
+      fieldRef.current.focus();
+      console.log('focused it');
     }
-  }, []);
+    console.log('daamn it');
+  }, [isStarted, ongoingItems]);
 
   React.useLayoutEffect(() => {
     if (fallingItemContainerRef && fallingItemContainerRef.current) {
@@ -73,18 +80,39 @@ const GameBoardView = () => {
     }
   }, []);
 
+  const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        return dispatch(move(MoveDirection.bottom));
+      case 'ArrowLeft':
+        return dispatch(move(MoveDirection.left));
+      case 'ArrowRight':
+        return dispatch(move(MoveDirection.right));
+      default:
+        return;
+    }
+  };
+
+  const handleFocus = () => {
+    if (fieldRef && fieldRef.current) {
+      fieldRef.current.focus();
+    }
+  };
+
   return (
-    <GameBoardDiv ref={fieldRef}>
+    <GameBoardDiv onClick={handleFocus}>
       <ItemViewContainerDiv ref={fallingItemContainerRef}>
         {ongoingItems?.human && (
-          <ItemView
-            id={ongoingItems.human.id}
-            weight={ongoingItems.human.weight}
-            scaleSize={ongoingItems.human.scaleSize}
-            offsetX={ongoingItems.human.offsetX}
-            offsetY={ongoingItems.human.offsetY}
-            itemShape={ongoingItems.human.itemShape}
-          />
+          <span onKeyDown={handleMovement} ref={fieldRef} tabIndex={0}>
+            <ItemView
+              id={ongoingItems.human.id}
+              weight={ongoingItems.human.weight}
+              scaleSize={ongoingItems.human.scaleSize}
+              offsetX={ongoingItems.human.offsetX}
+              offsetY={ongoingItems.human.offsetY}
+              itemShape={ongoingItems.human.itemShape}
+            />
+          </span>
         )}
       </ItemViewContainerDiv>
       <ItemViewContainerDiv ref={fallingItemContainerRef}>

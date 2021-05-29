@@ -1,6 +1,12 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { FallingItem, FallingItemShape } from '../redux/reducer';
+import { useAppDispatch } from '../redux/hooks';
+import {
+  FallingItem,
+  FallingItemShape,
+  move,
+  MoveDirection,
+} from '../redux/reducer';
 import { MAX_ITEM_SIZE } from '../redux/utils';
 
 // https://stackoverflow.com/a/25821830
@@ -71,6 +77,12 @@ export const ItemView: React.FC<
       console.log(fallingItemRef.current.getBoundingClientRect());
     }
   }, [fallingItemRef.current?.offsetLeft, fallingItemRef.current?.offsetTop]);
+
+  React.useEffect(() => {
+    if (fallingItemRef && fallingItemRef.current) {
+      fallingItemRef.current.focus();
+    }
+  }, []);
 
   const weightIndicatorText = <span>{weight}</span>;
 

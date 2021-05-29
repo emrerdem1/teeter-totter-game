@@ -22,6 +22,13 @@ export const calculateOffsetX = (cellPositionX: number): number => {
   return MAX_ITEM_SIZE * cellPositionX - MAX_ITEM_SIZE;
 };
 
+export const calculateOffsetY = (cellPositionY: number): number => {
+  // 0 is exclusive given that we want to multiple the position
+  // by the weight to calculate the momentum. So we need to exclude
+  // the cell's own size to get accurate coordinate.
+  return MAX_ITEM_SIZE * cellPositionY;
+};
+
 export const getRandomCellPositionX = (): number => {
   return Math.floor(Math.random() * HORIZONTAL_CELLS_COUNT + 1);
 };
@@ -36,9 +43,15 @@ export const getHorizontalPositionAfterMove = (
 ) => {
   switch (move) {
     case MoveDirection.left:
-      return positionX + MAX_ITEM_SIZE;
+      if (positionX != 0) {
+        return positionX - 1;
+      }
+      return positionX;
     case MoveDirection.right:
-      return positionX + MAX_ITEM_SIZE;
+      if (positionX != HORIZONTAL_CELLS_COUNT) {
+        return positionX + 1;
+      }
+      return positionX;
     default:
       return positionX;
   }
@@ -50,7 +63,10 @@ export const getVerticalPositionAfterMove = (
 ) => {
   switch (move) {
     case MoveDirection.bottom:
-      return positionY + MAX_ITEM_SIZE;
+      if (positionY != VERTICAL_CELLS_COUNT) {
+        return positionY - 1;
+      }
+      return positionY;
     default:
       return positionY;
   }

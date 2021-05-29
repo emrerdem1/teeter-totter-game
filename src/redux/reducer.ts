@@ -7,10 +7,10 @@ import {
   getHorizontalPositionAfterMove,
   getVerticalPositionAfterMove,
   getRandomCellPositionX,
+  calculateOffsetY,
 } from './utils';
 import { uuid } from 'uuidv4';
 import { RootState } from './store';
-import { useAppDispatch } from './hooks';
 
 const DEFAULT_VERTICAL_POSITION = 0;
 
@@ -105,25 +105,41 @@ const gameSlice = createSlice({
       return initialState;
     },
     continueCurrentGame: (state) => {},
-    humanMove: (state, action: PayloadAction<MoveDirection>) => {
+    move: (state, action: PayloadAction<MoveDirection>) => {
       const { human, machine } = state.ongoingItems!;
+
+      const possibleNewHumanCellPositionX = getHorizontalPositionAfterMove(
+        human.cellPositionX,
+        action.payload
+      );
+      const possibleNewHumanCellPositionY = getVerticalPositionAfterMove(
+        human.cellPositionY,
+        action.payload
+      );
+      const possibleNewMachineCellPositionY = getVerticalPositionAfterMove(
+        machine.cellPositionY,
+        action.payload
+      );
 
       state.ongoingItems = {
         human: {
           ...human,
-          offsetY: getVerticalPositionAfterMove(human.offsetY, action.payload),
-          offsetX: getHorizontalPositionAfterMove(
-            human.offsetX,
+          cellPositionY: getVerticalPositionAfterMove(
+            human.cellPositionY,
             action.payload
           ),
+          cellPositionX: getHorizontalPositionAfterMove(
+            human.cellPositionX,
+            action.payload
+          ),
+          offsetY: calculateOffsetY(possibleNewHumanCellPositionY),
+          offsetX: calculateOffsetX(possibleNewHumanCellPositionX),
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
-          offsetY: getVerticalPositionAfterMove(
-            machine.offsetY,
-            action.payload
-          ),
+          cellPositionY: possibleNewMachineCellPositionY,
+          offsetY: calculateOffsetY(possibleNewMachineCellPositionY),
         },
       };
     },
@@ -131,7 +147,7 @@ const gameSlice = createSlice({
 });
 
 export const { actions, reducer } = gameSlice;
-export const { startNewGame, stopCurrentGame, continueCurrentGame, humanMove } =
+export const { startNewGame, stopCurrentGame, continueCurrentGame, move } =
   actions;
 
 export const selectGame = (state: RootState) => state.gameSlice;

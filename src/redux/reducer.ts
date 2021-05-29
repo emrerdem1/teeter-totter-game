@@ -12,6 +12,7 @@ import {
   DEFAULT_SPEED_LEVEL,
   SPEED_INCREMENT_STEP,
   MAX_TORQUE,
+  HORIZONTAL_CELLS_COUNT,
 } from './utils';
 import { RootState } from './store';
 
@@ -83,8 +84,10 @@ const gameSlice = createSlice({
       const machineItemWeight = getRandomItemWeight();
       const humanCellPositionX = getRandomCellPositionX();
       const machineCellPositionX = getRandomCellPositionX();
+      const humanCellPositionXForMass =
+        HORIZONTAL_CELLS_COUNT - humanCellPositionX || 1;
       // https://en.wikipedia.org/wiki/Torque
-      const humanTorque = humanItemWeight * humanCellPositionX;
+      const humanTorque = humanItemWeight * humanCellPositionXForMass;
       const machineTorque = machineItemWeight * machineCellPositionX;
 
       state.ongoingItems = {

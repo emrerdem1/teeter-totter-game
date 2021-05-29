@@ -8,6 +8,7 @@ import {
   getVerticalPositionAfterMove,
   getRandomCellPositionX,
   DEFAULT_VERTICAL_POSITION,
+  VERTICAL_CELLS_COUNT,
 } from './utils';
 import { uuid } from 'uuidv4';
 import { RootState } from './store';
@@ -51,6 +52,7 @@ interface GameState {
   isStopped: boolean;
   isFinished: boolean;
   shouldProceedNextRound: boolean;
+  hasReachedGoalLine: boolean;
   ongoingItems: CompetitorsItemOngoing | null;
   doneItems: CompetitorsItemDone | null;
 }
@@ -60,6 +62,7 @@ const initialState: GameState = {
   isStopped: false,
   isFinished: false,
   shouldProceedNextRound: false,
+  hasReachedGoalLine: false,
   ongoingItems: null,
   doneItems: null,
 };
@@ -69,6 +72,7 @@ const gameSlice = createSlice({
   reducers: {
     startNewGame: (state) => {
       state.isStarted = true;
+      state.hasReachedGoalLine = false;
 
       const humanItemWeight = getRandomItemWeight();
       const machineItemWeight = getRandomItemWeight();
@@ -110,12 +114,8 @@ const gameSlice = createSlice({
         human.cellPositionX,
         action.payload
       );
-      const possibleNewHumanCellPositionY = getVerticalPositionAfterMove(
+      const possibleNewCellPositionY = getVerticalPositionAfterMove(
         human.cellPositionY,
-        action.payload
-      );
-      const possibleNewMachineCellPositionY = getVerticalPositionAfterMove(
-        machine.cellPositionY,
         action.payload
       );
 
@@ -130,16 +130,18 @@ const gameSlice = createSlice({
             human.cellPositionX,
             action.payload
           ),
-          offsetY: calculateOffset(possibleNewHumanCellPositionY),
+          offsetY: calculateOffset(possibleNewCellPositionY),
           offsetX: calculateOffset(possibleNewHumanCellPositionX),
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
-          cellPositionY: possibleNewMachineCellPositionY,
-          offsetY: calculateOffset(possibleNewMachineCellPositionY),
+          cellPositionY: possibleNewCellPositionY,
+          offsetY: calculateOffset(possibleNewCellPositionY),
         },
       };
+      state.hasReachedGoalLine =
+        possibleNewCellPositionY === VERTICAL_CELLS_COUNT;
     },
   },
 });

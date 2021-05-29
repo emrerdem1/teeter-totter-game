@@ -57,6 +57,7 @@ const GameBoardView = () => {
     isStarted,
     isFinished,
     shouldProceedNextRound,
+    hasReachedGoalLine,
     ongoingItems,
     doneItems,
   } = useAppSelector(selectGame);
@@ -69,8 +70,18 @@ const GameBoardView = () => {
       fieldRef.current.focus();
       console.log('focused it');
     }
-    console.log('daamn it');
   }, [ongoingItems]);
+
+  // Invoke movement for certain time interval
+  // when items exist and they are yet to react the goal line.
+  React.useEffect(() => {
+    if (ongoingItems && !hasReachedGoalLine) {
+      const timedMovement = setInterval(() => {
+        dispatch(move(MoveDirection.bottom));
+      }, 1000);
+      return () => clearInterval(timedMovement);
+    }
+  }, [ongoingItems, hasReachedGoalLine]);
 
   React.useLayoutEffect(() => {
     if (fallingItemContainerRef && fallingItemContainerRef.current) {
@@ -83,7 +94,7 @@ const GameBoardView = () => {
   const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
       case 'ArrowDown':
-        if (ongoingItems!.human.cellPositionY < VERTICAL_CELLS_COUNT) {
+        if (!hasReachedGoalLine) {
           return dispatch(move(MoveDirection.bottom));
         }
         break;

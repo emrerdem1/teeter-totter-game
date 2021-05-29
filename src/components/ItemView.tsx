@@ -1,12 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useAppDispatch } from '../redux/hooks';
-import {
-  FallingItem,
-  FallingItemShape,
-  move,
-  MoveDirection,
-} from '../redux/reducer';
+import { FallingItem, FallingItemShape } from '../redux/reducer';
 import { MAX_ITEM_SIZE } from '../redux/utils';
 
 // https://stackoverflow.com/a/25821830

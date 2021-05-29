@@ -64,7 +64,6 @@ const GameBoardView = () => {
   const {
     isStarted,
     isStopped,
-    isFinished,
     hasReachedGoalLine,
     speedLevel,
     ongoingItems,
@@ -85,7 +84,7 @@ const GameBoardView = () => {
       dispatch(saveCurrentRound());
       dispatch(startNewRound());
     }
-  }, [hasReachedGoalLine]);
+  }, [hasReachedGoalLine, dispatch]);
 
   // Invoke movement for certain time interval
   // when items exist and they are yet to react the goal line.
@@ -96,7 +95,7 @@ const GameBoardView = () => {
       }, 1000 / speedLevel);
       return () => clearInterval(timedMovement);
     }
-  }, [isStarted, isStopped, hasReachedGoalLine]);
+  }, [isStarted, isStopped, hasReachedGoalLine, dispatch, speedLevel]);
 
   const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!ongoingItems || isStopped) {

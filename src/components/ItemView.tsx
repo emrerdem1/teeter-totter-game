@@ -44,11 +44,9 @@ const CircleItemDiv = styled(SquareItemDiv)`
 const TriangleItemDiv = styled.div<{ scaleSize: number }>`
   width: 0;
   height: 0;
-  border-left: ${(props) => (props.scaleSize * MAX_ITEM_SIZE) / 2}px solid
-    transparent;
-  border-right: ${(props) => (props.scaleSize * MAX_ITEM_SIZE) / 2}px solid
-    transparent;
-  border-bottom: ${(props) => props.scaleSize * MAX_ITEM_SIZE}px solid #${getRandomHexColor()};
+  border-left: ${MAX_ITEM_SIZE / 2}px solid transparent;
+  border-right: ${MAX_ITEM_SIZE / 2}px solid transparent;
+  border-bottom: ${MAX_ITEM_SIZE}px solid #${getRandomHexColor()};
 
   span {
     position: absolute;
@@ -60,13 +58,20 @@ const TriangleItemDiv = styled.div<{ scaleSize: number }>`
   }
 `;
 
-export const ItemView: React.FC<FallingItem> = ({
-  weight,
-  scaleSize,
-  offsetX,
-  offsetY,
-  itemShape,
-}) => {
+export const ItemView: React.FC<
+  Omit<FallingItem, 'cellPositionX' | 'cellPositionY'>
+> = ({ weight, scaleSize, offsetX, offsetY, itemShape }) => {
+  const fallingItemRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (fallingItemRef && fallingItemRef.current) {
+      console.log('Width ' + fallingItemRef.current.offsetWidth);
+      console.log('Height ' + fallingItemRef.current.offsetHeight);
+      console.log('Left ' + fallingItemRef.current.offsetLeft);
+      console.log(fallingItemRef.current.getBoundingClientRect());
+    }
+  }, [fallingItemRef.current?.offsetLeft, fallingItemRef.current?.offsetTop]);
+
   const weightIndicatorText = <span>{weight}</span>;
 
   const getItemDivBasedOnShape = (shape: FallingItemShape) => {
@@ -86,6 +91,7 @@ export const ItemView: React.FC<FallingItem> = ({
 
   return (
     <FallingItemContainerDiv
+      ref={fallingItemRef}
       offsetX={offsetX}
       offsetY={offsetY}
       scaleSize={scaleSize}

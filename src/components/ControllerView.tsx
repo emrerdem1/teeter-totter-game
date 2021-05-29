@@ -1,7 +1,14 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useAppDispatch } from '../redux/hooks';
-import { startNewGame, stopCurrentGame } from '../redux/reducer';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import {
+  selectGame,
+  startNewGame,
+  stopCurrentGame,
+  continueCurrentGame,
+  humanMove,
+  MoveDirection,
+} from '../redux/reducer';
 
 const ControllerContainer = styled.div`
   display: flex;
@@ -17,14 +24,26 @@ const ControlButton = styled.button`
 `;
 
 export const ControllerView = () => {
+  const { isStopped } = useAppSelector(selectGame);
   const dispatch = useAppDispatch();
   const invokeNewGame = () => dispatch(startNewGame());
-  const stopGame = () => dispatch(stopCurrentGame());
+  const handleGameFlow = () => {
+    if (!isStopped) {
+      dispatch(stopCurrentGame());
+    }
+
+    dispatch(continueCurrentGame());
+  };
 
   return (
     <ControllerContainer>
       <ControlButton onClick={invokeNewGame}>New game</ControlButton>
-      <ControlButton onClick={stopGame}>Stop</ControlButton>
+      <ControlButton onClick={handleGameFlow}>
+        {isStopped ? 'Continue' : 'Stop'}
+      </ControlButton>
+      <ControlButton onClick={() => dispatch(humanMove(MoveDirection.right))}>
+        Move right
+      </ControlButton>
     </ControllerContainer>
   );
 };

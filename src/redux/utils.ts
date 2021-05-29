@@ -9,6 +9,7 @@ export const HORIZONTAL_CELLS_COUNT = 5;
 export const VERTICAL_CELLS_COUNT = 7;
 export const DEFAULT_VERTICAL_POSITION = 1;
 export const DEFAULT_SPEED_LEVEL = 1;
+export const MAX_TORQUE = 30;
 
 export const getRandomItemWeight = (): number => {
   return Math.floor(Math.random() * MAX_ITEM_WEIGHT + 1);

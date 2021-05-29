@@ -72,9 +72,8 @@ interface Deneme {
 }
 
 export const ItemView: React.FC<
-  Omit<FallingItem, 'cellPositionX' | 'cellPositionY'> & Deneme
+  Omit<FallingItem, 'cellPositionX' | 'cellPositionY' | 'unitTorque'> & Deneme
 > = ({ weight, scaleSize, offsetX, offsetY, itemShape, isTr }) => {
-
   const weightIndicatorText = <span>{weight}</span>;
 
   const getItemDivBasedOnShape = (shape: FallingItemShape) => {

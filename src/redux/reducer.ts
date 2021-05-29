@@ -11,6 +11,7 @@ import {
   VERTICAL_CELLS_COUNT,
   DEFAULT_SPEED_LEVEL,
   SPEED_INCREMENT_STEP,
+  MAX_TORQUE,
 } from './utils';
 import { RootState } from './store';
 
@@ -35,6 +36,7 @@ export interface FallingItem {
   cellPositionX: number;
   cellPositionY: number;
   itemShape: FallingItemShape;
+  unitTorque: number;
 }
 
 interface CompetitorsItemOngoing {
@@ -55,6 +57,7 @@ interface GameState {
   speedLevel: number;
   ongoingItems: CompetitorsItemOngoing | null;
   doneItems: CompetitorsItemDone;
+  torque: number;
 }
 
 const initialState: GameState = {
@@ -65,6 +68,7 @@ const initialState: GameState = {
   speedLevel: DEFAULT_SPEED_LEVEL,
   ongoingItems: null,
   doneItems: { human: [], machine: [] },
+  torque: 0,
 };
 const gameSlice = createSlice({
   name: 'game',
@@ -79,6 +83,9 @@ const gameSlice = createSlice({
       const machineItemWeight = getRandomItemWeight();
       const humanCellPositionX = getRandomCellPositionX();
       const machineCellPositionX = getRandomCellPositionX();
+      // https://en.wikipedia.org/wiki/Torque
+      const humanTorque = humanItemWeight * humanCellPositionX;
+      const machineTorque = machineItemWeight * machineCellPositionX;
 
       state.ongoingItems = {
         human: {
@@ -89,6 +96,7 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(humanCellPositionX),
+          unitTorque: humanTorque,
         },
         machine: {
           weight: machineItemWeight,
@@ -98,6 +106,7 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(machineCellPositionX),
+          unitTorque: machineTorque,
         },
       };
     },
@@ -165,9 +174,17 @@ const gameSlice = createSlice({
 
       const { human: humanFellItem, machine: machineFellItem } =
         state.ongoingItems!;
+      const calculatedTorque =
+        (humanFellItem.unitTorque - machineFellItem.unitTorque) * -1;
+
       state.doneItems.human.push(humanFellItem);
       state.doneItems.machine.push(machineFellItem);
       state.ongoingItems = null;
+      state.torque += calculatedTorque;
+      if (state.torque >= MAX_TORQUE) {
+        state.isFinished = true;
+        state.torque = MAX_TORQUE;
+      }
     },
     toggleCurrentGameFlow: (state) => {
       state.isStopped = !state.isStopped;

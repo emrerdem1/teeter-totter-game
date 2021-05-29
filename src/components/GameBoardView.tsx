@@ -38,10 +38,11 @@ const TotterBaseDiv = styled.div`
   justify-content: center;
 `;
 
-const TotterLineDiv = styled.div`
+const TotterLineDiv = styled.div<{ torque: number }>`
   width: 100%;
   height: ${TOTTER_LINE_HEIGHT}px;
   background: red;
+  transform: rotate(${(props) => props.torque ?? '0'}deg);
 `;
 
 const TriangleDiv = styled.div`
@@ -68,6 +69,7 @@ const GameBoardView = () => {
     speedLevel,
     ongoingItems,
     doneItems,
+    torque,
   } = useAppSelector(selectGame);
   const dispatch = useAppDispatch();
   const fallingItemRef = React.useRef<HTMLDivElement>(null);
@@ -157,7 +159,7 @@ const GameBoardView = () => {
         )}
       </ItemViewContainerDiv>
       <TotterBaseDiv>
-        <TotterLineDiv>
+        <TotterLineDiv torque={torque}>
           {doneItems?.human.map((d, idx) => (
             <ItemView
               // TODO(emrerdem1): You should consider having ID

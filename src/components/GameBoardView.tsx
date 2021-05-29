@@ -40,9 +40,9 @@ const TotterLineDiv = styled.div`
 const TriangleDiv = styled.div`
   width: 0;
   height: 0;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
-  border-bottom: 100px solid gray;
+  border-left: ${TOTTER_BALANCER_HEIGHT / 3}px solid transparent;
+  border-right: ${TOTTER_BALANCER_HEIGHT / 3}px solid transparent;
+  border-bottom: ${TOTTER_BALANCER_HEIGHT}px solid gray;
 `;
 
 const ItemViewContainerDiv = styled.div`
@@ -70,7 +70,7 @@ const GameBoardView = () => {
       console.log('focused it');
     }
     console.log('daamn it');
-  }, [isStarted, ongoingItems]);
+  }, [ongoingItems]);
 
   React.useLayoutEffect(() => {
     if (fallingItemContainerRef && fallingItemContainerRef.current) {
@@ -83,11 +83,20 @@ const GameBoardView = () => {
   const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
       case 'ArrowDown':
-        return dispatch(move(MoveDirection.bottom));
+        if (ongoingItems!.human.cellPositionY < VERTICAL_CELLS_COUNT) {
+          return dispatch(move(MoveDirection.bottom));
+        }
+        break;
       case 'ArrowLeft':
-        return dispatch(move(MoveDirection.left));
+        if (ongoingItems!.human.cellPositionX > 1) {
+          return dispatch(move(MoveDirection.left));
+        }
+        break;
       case 'ArrowRight':
-        return dispatch(move(MoveDirection.right));
+        if (ongoingItems!.human.cellPositionX < HORIZONTAL_CELLS_COUNT) {
+          return dispatch(move(MoveDirection.right));
+        }
+        break;
       default:
         return;
     }
@@ -103,7 +112,7 @@ const GameBoardView = () => {
     <GameBoardDiv onClick={handleFocus}>
       <ItemViewContainerDiv ref={fallingItemContainerRef}>
         {ongoingItems?.human && (
-          // It does not receive key down event without tabIndex.
+          // tabIndex is needed to receive key down events.
           <span onKeyDown={handleMovement} ref={fieldRef} tabIndex={0}>
             <ItemView
               id={ongoingItems.human.id}

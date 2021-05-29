@@ -37,15 +37,9 @@ export const getHorizontalPositionAfterMove = (
 ) => {
   switch (move) {
     case MoveDirection.left:
-      if (positionX > 1) {
-        return positionX - 1;
-      }
-      return positionX;
+      return positionX - 1;
     case MoveDirection.right:
-      if (positionX < HORIZONTAL_CELLS_COUNT) {
-        return positionX + 1;
-      }
-      return positionX;
+      return positionX + 1;
     default:
       return positionX;
   }
@@ -57,10 +51,7 @@ export const getVerticalPositionAfterMove = (
 ) => {
   switch (move) {
     case MoveDirection.bottom:
-      if (positionY != VERTICAL_CELLS_COUNT) {
-        return positionY + 1;
-      }
-      return positionY;
+      return positionY + 1;
     default:
       return positionY;
   }

@@ -21,7 +21,7 @@ const ControlButton = styled.button`
 `;
 
 export const ControllerView: React.FC = () => {
-  const { isStopped, isStarted } = useAppSelector(selectGame);
+  const { isStopped, isStarted, isFinished } = useAppSelector(selectGame);
   const dispatch = useAppDispatch();
 
   const invokeNewGame = () => {
@@ -35,7 +35,10 @@ export const ControllerView: React.FC = () => {
   return (
     <ControllerContainer>
       <ControlButton onClick={invokeNewGame}>New game</ControlButton>
-      <ControlButton onClick={handleGameFlow} disabled={!isStarted}>
+      <ControlButton
+        onClick={handleGameFlow}
+        disabled={!isStarted || isFinished}
+      >
         {isStopped ? 'Continue' : 'Stop'}
       </ControlButton>
     </ControllerContainer>

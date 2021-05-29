@@ -60,10 +60,26 @@ const ItemViewContainerDiv = styled.div`
   position: relative;
 `;
 
+// TODO(emrerdem1): Prepare a decent overlay screen.
+const GameOverDiv = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #0000003d;
+  z-index: 100;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const GamePausedDiv = styled(GameOverDiv)``;
+
 const GameBoardView = () => {
   const {
     isStarted,
     isStopped,
+    isFinished,
     hasReachedGoalLine,
     speedLevel,
     ongoingItems,
@@ -132,6 +148,8 @@ const GameBoardView = () => {
 
   return (
     <GameBoardDiv onClick={handleFocus}>
+      {isFinished && <GameOverDiv>Game over.</GameOverDiv>}
+      {isStopped && <GamePausedDiv>Paused.</GamePausedDiv>}
       <ItemViewContainerDiv>
         {ongoingItems?.human && (
           // tabIndex is needed to receive key down events.

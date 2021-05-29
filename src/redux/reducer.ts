@@ -195,7 +195,8 @@ const gameSlice = createSlice({
       state.doneItems.machine.push(machineFellItem);
       state.ongoingItems = null;
       state.torque += calculatedTorque;
-      if (state.torque >= MAX_TORQUE) {
+      if (Math.abs(state.torque) >= MAX_TORQUE) {
+        state.isStarted = false;
         state.isFinished = true;
         state.torque = MAX_TORQUE;
       }

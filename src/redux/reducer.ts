@@ -99,7 +99,10 @@ const gameSlice = createSlice({
           offsetX: calculateOffset(humanCellPositionX),
           unitTorque: calculateTorqueOfFallingItem(
             humanItemWeight,
-            humanCellPositionX
+            reverseHorizontalCellPosition(
+              HORIZONTAL_CELLS_COUNT,
+              humanCellPositionX
+            )
           ),
         },
         machine: {

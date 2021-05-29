@@ -37,7 +37,7 @@ export const calculateScaleSize = (weight: number): number => {
 export const getHorizontalPositionAfterMove = (
   positionX: number,
   move: MoveDirection
-) => {
+): number => {
   switch (move) {
     case MoveDirection.left:
       return positionX - 1;
@@ -51,11 +51,31 @@ export const getHorizontalPositionAfterMove = (
 export const getVerticalPositionAfterMove = (
   positionY: number,
   move: MoveDirection
-) => {
+): number => {
   switch (move) {
     case MoveDirection.bottom:
       return positionY + 1;
     default:
       return positionY;
   }
+};
+
+// https://en.wikipedia.org/wiki/Torque
+export const calculateTorqueOfFallingItem = (
+  mass: number,
+  distance: number
+): number => {
+  return mass * distance;
+};
+
+/*
+ * Positions start from 1 to the max count, hence
+ * the left side has to be reversed to accurate calculation.
+ * Note that this should only be applied to the left side.
+ */
+export const reverseHorizontalCellPosition = (
+  maxCount: number,
+  currentPosition: number
+): number => {
+  return maxCount - currentPosition + 1;
 };

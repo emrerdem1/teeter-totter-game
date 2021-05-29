@@ -13,6 +13,8 @@ import {
   SPEED_INCREMENT_STEP,
   MAX_TORQUE,
   HORIZONTAL_CELLS_COUNT,
+  calculateTorqueOfFallingItem,
+  reverseHorizontalCellPosition,
 } from './utils';
 import { RootState } from './store';
 
@@ -84,6 +86,7 @@ const gameSlice = createSlice({
       const machineItemWeight = getRandomItemWeight();
       const humanCellPositionX = getRandomCellPositionX();
       const machineCellPositionX = getRandomCellPositionX();
+      const machineTorque = machineItemWeight * machineCellPositionX;
 
       state.ongoingItems = {
         human: {
@@ -94,7 +97,10 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(humanCellPositionX),
-          unitTorque: 0,
+          unitTorque: calculateTorqueOfFallingItem(
+            humanItemWeight,
+            humanCellPositionX
+          ),
         },
         machine: {
           weight: machineItemWeight,
@@ -104,7 +110,7 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(machineCellPositionX),
-          unitTorque: 0,
+          unitTorque: machineTorque,
         },
       };
     },
@@ -120,13 +126,6 @@ const gameSlice = createSlice({
         action.payload
       );
       const mutualVerticalOffset = calculateOffset(possibleNewCellPositionY);
-      const humanCellPositionXForMass =
-        HORIZONTAL_CELLS_COUNT - possibleNewHumanCellPositionX + 1;
-      // https://en.wikipedia.org/wiki/Torque
-      const humanTorque = human.weight * humanCellPositionXForMass;
-      // Machine is also put here because it will not stay stable
-      // in the future.
-      const machineTorque = machine.weight * machine.cellPositionX;
 
       state.ongoingItems = {
         human: {
@@ -135,14 +134,19 @@ const gameSlice = createSlice({
           cellPositionX: possibleNewHumanCellPositionX,
           offsetY: mutualVerticalOffset,
           offsetX: calculateOffset(possibleNewHumanCellPositionX),
-          unitTorque: humanTorque,
+          unitTorque: calculateTorqueOfFallingItem(
+            human.weight,
+            reverseHorizontalCellPosition(
+              HORIZONTAL_CELLS_COUNT,
+              possibleNewHumanCellPositionX
+            )
+          ),
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
           cellPositionY: possibleNewCellPositionY,
           offsetY: mutualVerticalOffset,
-          unitTorque: machineTorque,
         },
       };
       state.hasReachedGoalLine =

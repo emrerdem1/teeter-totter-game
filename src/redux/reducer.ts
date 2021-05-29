@@ -84,11 +84,6 @@ const gameSlice = createSlice({
       const machineItemWeight = getRandomItemWeight();
       const humanCellPositionX = getRandomCellPositionX();
       const machineCellPositionX = getRandomCellPositionX();
-      const humanCellPositionXForMass =
-        HORIZONTAL_CELLS_COUNT - humanCellPositionX || 1;
-      // https://en.wikipedia.org/wiki/Torque
-      const humanTorque = humanItemWeight * humanCellPositionXForMass;
-      const machineTorque = machineItemWeight * machineCellPositionX;
 
       state.ongoingItems = {
         human: {
@@ -99,7 +94,7 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(humanCellPositionX),
-          unitTorque: humanTorque,
+          unitTorque: 0,
         },
         machine: {
           weight: machineItemWeight,
@@ -109,7 +104,7 @@ const gameSlice = createSlice({
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(machineCellPositionX),
-          unitTorque: machineTorque,
+          unitTorque: 0,
         },
       };
     },
@@ -125,6 +120,13 @@ const gameSlice = createSlice({
         action.payload
       );
       const mutualVerticalOffset = calculateOffset(possibleNewCellPositionY);
+      const humanCellPositionXForMass =
+        HORIZONTAL_CELLS_COUNT - possibleNewHumanCellPositionX + 1;
+      // https://en.wikipedia.org/wiki/Torque
+      const humanTorque = human.weight * humanCellPositionXForMass;
+      // Machine is also put here because it will not stay stable
+      // in the future.
+      const machineTorque = machine.weight * machine.cellPositionX;
 
       state.ongoingItems = {
         human: {
@@ -133,12 +135,14 @@ const gameSlice = createSlice({
           cellPositionX: possibleNewHumanCellPositionX,
           offsetY: mutualVerticalOffset,
           offsetX: calculateOffset(possibleNewHumanCellPositionX),
+          unitTorque: humanTorque,
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
           cellPositionY: possibleNewCellPositionY,
           offsetY: mutualVerticalOffset,
+          unitTorque: machineTorque,
         },
       };
       state.hasReachedGoalLine =

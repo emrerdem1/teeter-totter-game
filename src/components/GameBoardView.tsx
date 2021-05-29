@@ -97,7 +97,7 @@ const GameBoardView = () => {
     }
   }, [isStarted, isStopped, hasReachedGoalLine, dispatch, speedLevel]);
 
-  const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleMovement = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     if (!ongoingItems || isStopped) {
       return;
     }

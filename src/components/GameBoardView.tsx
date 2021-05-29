@@ -103,6 +103,7 @@ const GameBoardView = () => {
     <GameBoardDiv onClick={handleFocus}>
       <ItemViewContainerDiv ref={fallingItemContainerRef}>
         {ongoingItems?.human && (
+          // It does not receive key down event without tabIndex.
           <span onKeyDown={handleMovement} ref={fieldRef} tabIndex={0}>
             <ItemView
               id={ongoingItems.human.id}

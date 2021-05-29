@@ -2,17 +2,15 @@ import { combineReducers, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   getRandomItemWeight,
   getRandomFallingItemShape,
-  calculateOffsetX,
+  calculateOffset,
   calculateScaleSize,
   getHorizontalPositionAfterMove,
   getVerticalPositionAfterMove,
   getRandomCellPositionX,
-  calculateOffsetY,
+  DEFAULT_VERTICAL_POSITION,
 } from './utils';
 import { uuid } from 'uuidv4';
 import { RootState } from './store';
-
-const DEFAULT_VERTICAL_POSITION = 0;
 
 export enum FallingItemShape {
   circle,
@@ -86,7 +84,7 @@ const gameSlice = createSlice({
           cellPositionX: humanCellPositionX,
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
-          offsetX: calculateOffsetX(humanCellPositionX),
+          offsetX: calculateOffset(humanCellPositionX),
         },
         machine: {
           id: uuid(),
@@ -96,7 +94,7 @@ const gameSlice = createSlice({
           cellPositionX: machineCellPositionX,
           cellPositionY: DEFAULT_VERTICAL_POSITION,
           offsetY: DEFAULT_VERTICAL_POSITION,
-          offsetX: calculateOffsetX(machineCellPositionX),
+          offsetX: calculateOffset(machineCellPositionX),
         },
       };
     },
@@ -132,14 +130,14 @@ const gameSlice = createSlice({
             human.cellPositionX,
             action.payload
           ),
-          offsetY: calculateOffsetY(possibleNewHumanCellPositionY),
-          offsetX: calculateOffsetX(possibleNewHumanCellPositionX),
+          offsetY: calculateOffset(possibleNewHumanCellPositionY),
+          offsetX: calculateOffset(possibleNewHumanCellPositionX),
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
           cellPositionY: possibleNewMachineCellPositionY,
-          offsetY: calculateOffsetY(possibleNewMachineCellPositionY),
+          offsetY: calculateOffset(possibleNewMachineCellPositionY),
         },
       };
     },

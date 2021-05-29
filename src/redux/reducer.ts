@@ -9,6 +9,7 @@ import {
   getRandomCellPositionX,
   calculateTorqueOfFallingItem,
   reverseHorizontalCellPosition,
+  getRandomHexColor,
 } from './utils';
 import { GameState, MoveDirection } from './types';
 import { RootState } from './store';
@@ -62,6 +63,7 @@ const gameSlice = createSlice({
               humanCellPositionX
             )
           ),
+          itemColor: getRandomHexColor(),
         },
         machine: {
           weight: machineItemWeight,
@@ -72,6 +74,7 @@ const gameSlice = createSlice({
           offsetY: DEFAULT_VERTICAL_POSITION,
           offsetX: calculateOffset(machineCellPositionX),
           unitTorque: machineTorque,
+          itemColor: getRandomHexColor(),
         },
       };
     },

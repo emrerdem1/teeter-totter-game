@@ -75,3 +75,9 @@ export const reverseHorizontalCellPosition = (
 ): number => {
   return maxCount - currentPosition + 1;
 };
+
+// https://stackoverflow.com/a/25821830
+export const getRandomHexColor = () =>
+  `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, '0')}`;

@@ -18,6 +18,7 @@ export interface FallingItem {
   offsetY: number;
   cellPositionX: number;
   cellPositionY: number;
+  itemColor: string;
   itemShape: FallingItemShape;
   unitTorque: number;
 }

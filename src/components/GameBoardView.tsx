@@ -160,6 +160,7 @@ const GameBoardView = () => {
               offsetX={ongoingItems.human.offsetX}
               offsetY={ongoingItems.human.offsetY}
               itemShape={ongoingItems.human.itemShape}
+              itemColor={ongoingItems.human.itemColor}
             />
           </span>
         )}
@@ -172,6 +173,7 @@ const GameBoardView = () => {
             offsetX={ongoingItems.machine.offsetX}
             offsetY={ongoingItems.machine.offsetY}
             itemShape={ongoingItems.machine.itemShape}
+            itemColor={ongoingItems.machine.itemColor}
           />
         )}
       </ItemViewContainerDiv>
@@ -187,6 +189,7 @@ const GameBoardView = () => {
               offsetX={d.offsetX}
               offsetY={d.offsetY}
               itemShape={d.itemShape}
+              itemColor={d.itemColor}
               isInGoalLine={true}
             />
           ))}

@@ -3,12 +3,6 @@ import React from 'react';
 import { FallingItem, FallingItemShape } from '../redux/types';
 import { MAX_ITEM_SIZE } from '../redux/constants';
 
-// https://stackoverflow.com/a/25821830
-const getRandomHexColor = () =>
-  Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, '0');
-
 interface FallingItemContainerProps {
   offsetX: number;
   offsetY: number;
@@ -19,7 +13,6 @@ interface FallingItemContainerProps {
 
 const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   position: ${(props) => `${props.isInGoalLine ? 'relative' : 'absolute'}`};
-
   top: ${(props) => `${props.offsetY}px`};
   left: ${(props) => `${props.offsetX}px`};
   color: white;
@@ -32,25 +25,25 @@ const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   display: ${(props) => `${props.isInGoalLine ? 'inline-block' : 'flex'}`};
 `;
 
-const SquareItemDiv = styled.div`
+const SquareItemDiv = styled.div<{ itemColor: string }>`
   width: 100%;
   height: 100%;
-  background: #${getRandomHexColor()};
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => `${props.itemColor}`};
 `;
 
 const CircleItemDiv = styled(SquareItemDiv)`
   border-radius: 50%;
 `;
 
-const TriangleItemDiv = styled.div<{ scaleSize: number }>`
+const TriangleItemDiv = styled.div<{ itemColor: string }>`
   width: 0;
   height: 0;
   border-left: ${MAX_ITEM_SIZE / 2}px solid transparent;
   border-right: ${MAX_ITEM_SIZE / 2}px solid transparent;
-  border-bottom: ${MAX_ITEM_SIZE}px solid #${getRandomHexColor()};
+  border-bottom: ${MAX_ITEM_SIZE}px solid ${(props) => props.itemColor};
 
   span {
     position: absolute;
@@ -69,18 +62,34 @@ interface FallingItemInGoalLine {
 export const ItemView: React.FC<
   Omit<FallingItem, 'cellPositionX' | 'cellPositionY' | 'unitTorque'> &
     FallingItemInGoalLine
-> = ({ weight, scaleSize, offsetX, offsetY, itemShape, isInGoalLine }) => {
+> = ({
+  weight,
+  scaleSize,
+  offsetX,
+  offsetY,
+  itemShape,
+  itemColor,
+  isInGoalLine,
+}) => {
   const weightIndicatorText = <span>{weight}</span>;
 
   const getItemDivBasedOnShape = (shape: FallingItemShape) => {
     switch (shape) {
       case FallingItemShape.circle:
-        return <CircleItemDiv>{weightIndicatorText}</CircleItemDiv>;
+        return (
+          <CircleItemDiv itemColor={itemColor}>
+            {weightIndicatorText}
+          </CircleItemDiv>
+        );
       case FallingItemShape.rectangle:
-        return <SquareItemDiv>{weightIndicatorText}</SquareItemDiv>;
+        return (
+          <SquareItemDiv itemColor={itemColor}>
+            {weightIndicatorText}
+          </SquareItemDiv>
+        );
       case FallingItemShape.triangle:
         return (
-          <TriangleItemDiv scaleSize={scaleSize}>
+          <TriangleItemDiv itemColor={itemColor}>
             {weightIndicatorText}
           </TriangleItemDiv>
         );

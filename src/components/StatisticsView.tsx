@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useAppSelector } from '../redux/hooks';
-import { FallingItem, selectGame } from '../redux/reducer';
+import { selectGame } from '../redux/reducer';
+import { FallingItem } from '../redux/types';
 
 const StatisticsContainerDiv = styled.div`
   display: flex;

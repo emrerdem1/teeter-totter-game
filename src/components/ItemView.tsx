@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { FallingItem, FallingItemShape } from '../redux/reducer';
-import { MAX_ITEM_SIZE } from '../redux/utils';
+import { FallingItem, FallingItemShape } from '../redux/types';
+import { MAX_ITEM_SIZE } from '../redux/constants';
 
 // https://stackoverflow.com/a/25821830
 const getRandomHexColor = () =>

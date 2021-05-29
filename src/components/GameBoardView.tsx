@@ -4,16 +4,16 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   move,
   autoMove,
-  MoveDirection,
   selectGame,
   startNewRound,
   saveCurrentRound,
 } from '../redux/reducer';
+import { MoveDirection } from '../redux/types';
 import {
   HORIZONTAL_CELLS_COUNT,
   VERTICAL_CELLS_COUNT,
   MAX_ITEM_SIZE,
-} from '../redux/utils';
+} from '../redux/constants';
 import ItemView from './ItemView';
 
 const TOTTER_LINE_HEIGHT = 5;

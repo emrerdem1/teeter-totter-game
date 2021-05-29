@@ -7,61 +7,19 @@ import {
   getHorizontalPositionAfterMove,
   getVerticalPositionAfterMove,
   getRandomCellPositionX,
+  calculateTorqueOfFallingItem,
+  reverseHorizontalCellPosition,
+} from './utils';
+import { GameState, MoveDirection } from './types';
+import { RootState } from './store';
+import {
   DEFAULT_VERTICAL_POSITION,
   VERTICAL_CELLS_COUNT,
   DEFAULT_SPEED_LEVEL,
   SPEED_INCREMENT_STEP,
   MAX_TORQUE,
   HORIZONTAL_CELLS_COUNT,
-  calculateTorqueOfFallingItem,
-  reverseHorizontalCellPosition,
-} from './utils';
-import { RootState } from './store';
-
-export enum FallingItemShape {
-  circle,
-  triangle,
-  rectangle,
-}
-
-export enum MoveDirection {
-  left,
-  right,
-  bottom,
-}
-
-export interface FallingItem {
-  weight: number;
-  // Depends on the weight.
-  scaleSize: number;
-  offsetX: number;
-  offsetY: number;
-  cellPositionX: number;
-  cellPositionY: number;
-  itemShape: FallingItemShape;
-  unitTorque: number;
-}
-
-interface CompetitorsItemOngoing {
-  human: FallingItem;
-  machine: FallingItem;
-}
-
-interface CompetitorsItemDone {
-  human: FallingItem[];
-  machine: FallingItem[];
-}
-
-interface GameState {
-  isStarted: boolean;
-  isStopped: boolean;
-  isFinished: boolean;
-  hasReachedGoalLine: boolean;
-  speedLevel: number;
-  ongoingItems: CompetitorsItemOngoing | null;
-  doneItems: CompetitorsItemDone;
-  torque: number;
-}
+} from './constants';
 
 const initialState: GameState = {
   isStarted: false,

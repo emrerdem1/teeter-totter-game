@@ -1,15 +1,11 @@
-import { FallingItemShape, MoveDirection } from './reducer';
-
-const BASE_SCALE = 0.5;
-const SCALE_AMOUNT = 0.05;
-const MAX_ITEM_WEIGHT = 10;
-export const SPEED_INCREMENT_STEP = 0.5;
-export const MAX_ITEM_SIZE = 40;
-export const HORIZONTAL_CELLS_COUNT = 5;
-export const VERTICAL_CELLS_COUNT = 7;
-export const DEFAULT_VERTICAL_POSITION = 1;
-export const DEFAULT_SPEED_LEVEL = 1;
-export const MAX_TORQUE = 30;
+import {
+  MAX_ITEM_WEIGHT,
+  MAX_ITEM_SIZE,
+  HORIZONTAL_CELLS_COUNT,
+  SCALE_AMOUNT,
+  BASE_SCALE,
+} from './constants';
+import { FallingItemShape, MoveDirection } from './types';
 
 export const getRandomItemWeight = (): number => {
   return Math.floor(Math.random() * MAX_ITEM_WEIGHT + 1);

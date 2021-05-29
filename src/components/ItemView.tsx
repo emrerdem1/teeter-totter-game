@@ -19,10 +19,12 @@ interface FallingItemContainerProps {
   offsetX: number;
   offsetY: number;
   scaleSize: number;
+  isRelative?: boolean;
 }
 
 const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
-  position: absolute;
+  position: ${(props) => `${props.isRelative ? 'relative' : 'absolute'}`};
+
   top: ${(props) => `${props.offsetY}px`};
   left: ${(props) => `${props.offsetX}px`};
   color: white;
@@ -32,6 +34,7 @@ const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   width: ${MAX_ITEM_SIZE}px;
   height: ${MAX_ITEM_SIZE}px;
   transform: scale(${(props) => props.scaleSize});
+  display: ${(props) => `${props.isRelative ? 'inline-block' : 'flex'}`};
 `;
 
 const SquareItemDiv = styled.div`
@@ -64,25 +67,13 @@ const TriangleItemDiv = styled.div<{ scaleSize: number }>`
   }
 `;
 
+interface Deneme {
+  isTr?: boolean;
+}
+
 export const ItemView: React.FC<
-  Omit<FallingItem, 'cellPositionX' | 'cellPositionY'>
-> = ({ weight, scaleSize, offsetX, offsetY, itemShape }) => {
-  const fallingItemRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (fallingItemRef && fallingItemRef.current) {
-      console.log('Width ' + fallingItemRef.current.offsetWidth);
-      console.log('Height ' + fallingItemRef.current.offsetHeight);
-      console.log('Left ' + fallingItemRef.current.offsetLeft);
-      console.log(fallingItemRef.current.getBoundingClientRect());
-    }
-  }, [fallingItemRef.current?.offsetLeft, fallingItemRef.current?.offsetTop]);
-
-  React.useEffect(() => {
-    if (fallingItemRef && fallingItemRef.current) {
-      fallingItemRef.current.focus();
-    }
-  }, []);
+  Omit<FallingItem, 'cellPositionX' | 'cellPositionY'> & Deneme
+> = ({ weight, scaleSize, offsetX, offsetY, itemShape, isTr }) => {
 
   const weightIndicatorText = <span>{weight}</span>;
 
@@ -103,10 +94,10 @@ export const ItemView: React.FC<
 
   return (
     <FallingItemContainerDiv
-      ref={fallingItemRef}
       offsetX={offsetX}
       offsetY={offsetY}
       scaleSize={scaleSize}
+      isRelative={isTr}
     >
       {getItemDivBasedOnShape(itemShape)}
     </FallingItemContainerDiv>

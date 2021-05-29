@@ -9,8 +9,9 @@ import {
   getRandomCellPositionX,
   DEFAULT_VERTICAL_POSITION,
   VERTICAL_CELLS_COUNT,
+  DEFAULT_SPEED_LEVEL,
+  SPEED_INCREMENT_STEP,
 } from './utils';
-import { uuid } from 'uuidv4';
 import { RootState } from './store';
 
 export enum FallingItemShape {
@@ -26,7 +27,6 @@ export enum MoveDirection {
 }
 
 export interface FallingItem {
-  id: string;
   weight: number;
   // Depends on the weight.
   scaleSize: number;
@@ -51,29 +51,30 @@ interface GameState {
   isStarted: boolean;
   isStopped: boolean;
   isFinished: boolean;
-  shouldProceedNextRound: boolean;
   hasReachedGoalLine: boolean;
+  speedLevel: number;
   ongoingItems: CompetitorsItemOngoing | null;
-  doneItems: CompetitorsItemDone | null;
+  doneItems: CompetitorsItemDone;
 }
 
 const initialState: GameState = {
   isStarted: false,
   isStopped: false,
   isFinished: false,
-  shouldProceedNextRound: false,
   hasReachedGoalLine: false,
+  speedLevel: DEFAULT_SPEED_LEVEL,
   ongoingItems: null,
-  doneItems: null,
+  doneItems: { human: [], machine: [] },
 };
 const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
     startNewGame: (state) => {
-      state.isStarted = true;
-      state.hasReachedGoalLine = false;
-
+      state = { ...initialState, isStarted: true };
+      return state;
+    },
+    startNewRound: (state) => {
       const humanItemWeight = getRandomItemWeight();
       const machineItemWeight = getRandomItemWeight();
       const humanCellPositionX = getRandomCellPositionX();
@@ -81,7 +82,6 @@ const gameSlice = createSlice({
 
       state.ongoingItems = {
         human: {
-          id: uuid(),
           weight: humanItemWeight,
           scaleSize: calculateScaleSize(humanItemWeight),
           itemShape: getRandomFallingItemShape(),
@@ -91,7 +91,6 @@ const gameSlice = createSlice({
           offsetX: calculateOffset(humanCellPositionX),
         },
         machine: {
-          id: uuid(),
           weight: machineItemWeight,
           scaleSize: calculateScaleSize(machineItemWeight),
           itemShape: getRandomFallingItemShape(),
@@ -102,11 +101,6 @@ const gameSlice = createSlice({
         },
       };
     },
-    proceedNextRound: (state) => {},
-    stopCurrentGame: (state) => {
-      return initialState;
-    },
-    continueCurrentGame: (state) => {},
     move: (state, action: PayloadAction<MoveDirection>) => {
       const { human, machine } = state.ongoingItems!;
 
@@ -118,37 +112,78 @@ const gameSlice = createSlice({
         human.cellPositionY,
         action.payload
       );
+      const mutualVerticalOffset = calculateOffset(possibleNewCellPositionY);
 
       state.ongoingItems = {
         human: {
           ...human,
-          cellPositionY: getVerticalPositionAfterMove(
-            human.cellPositionY,
-            action.payload
-          ),
-          cellPositionX: getHorizontalPositionAfterMove(
-            human.cellPositionX,
-            action.payload
-          ),
-          offsetY: calculateOffset(possibleNewCellPositionY),
+          cellPositionY: possibleNewCellPositionY,
+          cellPositionX: possibleNewHumanCellPositionX,
+          offsetY: mutualVerticalOffset,
           offsetX: calculateOffset(possibleNewHumanCellPositionX),
         },
         machine: {
           ...machine,
           // Human move can only affect the vertical position of the machine item.
           cellPositionY: possibleNewCellPositionY,
-          offsetY: calculateOffset(possibleNewCellPositionY),
+          offsetY: mutualVerticalOffset,
         },
       };
       state.hasReachedGoalLine =
         possibleNewCellPositionY === VERTICAL_CELLS_COUNT;
     },
+    autoMove: (state, action: PayloadAction<MoveDirection>) => {
+      const { human, machine } = state.ongoingItems!;
+
+      const possibleNewCellPositionY = getVerticalPositionAfterMove(
+        human.cellPositionY,
+        action.payload
+      );
+      // Auto move can only affect the vertical position for now.
+      // TODO(emrerdem1): You should implement logical calculations
+      // to place items in order to preserve the balacan as much as possible.
+      const mutualVerticalOffset = calculateOffset(possibleNewCellPositionY);
+
+      state.ongoingItems = {
+        human: {
+          ...human,
+          cellPositionY: possibleNewCellPositionY,
+          offsetY: mutualVerticalOffset,
+        },
+        machine: {
+          ...machine,
+          cellPositionY: possibleNewCellPositionY,
+          offsetY: mutualVerticalOffset,
+        },
+      };
+      state.hasReachedGoalLine =
+        possibleNewCellPositionY === VERTICAL_CELLS_COUNT;
+    },
+    saveCurrentRound: (state) => {
+      state.speedLevel += SPEED_INCREMENT_STEP;
+      state.hasReachedGoalLine = false;
+
+      const { human: humanFellItem, machine: machineFellItem } =
+        state.ongoingItems!;
+      state.doneItems.human.push(humanFellItem);
+      state.doneItems.machine.push(machineFellItem);
+      state.ongoingItems = null;
+    },
+    toggleCurrentGameFlow: (state) => {
+      state.isStopped = !state.isStopped;
+    },
   },
 });
 
 export const { actions, reducer } = gameSlice;
-export const { startNewGame, stopCurrentGame, continueCurrentGame, move } =
-  actions;
+export const {
+  startNewGame,
+  toggleCurrentGameFlow,
+  move,
+  autoMove,
+  startNewRound,
+  saveCurrentRound,
+} = actions;
 
 export const selectGame = (state: RootState) => state.gameSlice;
 

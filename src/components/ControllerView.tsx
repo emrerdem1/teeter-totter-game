@@ -4,10 +4,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   selectGame,
   startNewGame,
-  stopCurrentGame,
-  continueCurrentGame,
-  move,
-  MoveDirection,
+  startNewRound,
+  toggleCurrentGameFlow,
 } from '../redux/reducer';
 
 const ControllerContainer = styled.div`
@@ -23,26 +21,23 @@ const ControlButton = styled.button`
   padding: 10px 15px;
 `;
 
-export const ControllerView = () => {
-  const { isStopped } = useAppSelector(selectGame);
+export const ControllerView: React.FC = () => {
+  const { isStopped, isStarted } = useAppSelector(selectGame);
   const dispatch = useAppDispatch();
-  const invokeNewGame = () => dispatch(startNewGame());
-  const handleGameFlow = () => {
-    if (!isStopped) {
-      dispatch(stopCurrentGame());
-    }
 
-    dispatch(continueCurrentGame());
+  const invokeNewGame = () => {
+    dispatch(startNewGame());
+    dispatch(startNewRound());
+  };
+  const handleGameFlow = () => {
+    dispatch(toggleCurrentGameFlow());
   };
 
   return (
     <ControllerContainer>
       <ControlButton onClick={invokeNewGame}>New game</ControlButton>
-      <ControlButton onClick={handleGameFlow}>
+      <ControlButton onClick={handleGameFlow} disabled={!isStarted}>
         {isStopped ? 'Continue' : 'Stop'}
-      </ControlButton>
-      <ControlButton onClick={() => dispatch(move(MoveDirection.right))}>
-        Move right
       </ControlButton>
     </ControllerContainer>
   );

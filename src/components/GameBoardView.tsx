@@ -1,7 +1,14 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { move, MoveDirection, selectGame } from '../redux/reducer';
+import {
+  move,
+  autoMove,
+  MoveDirection,
+  selectGame,
+  startNewRound,
+  saveCurrentRound,
+} from '../redux/reducer';
 import {
   HORIZONTAL_CELLS_COUNT,
   VERTICAL_CELLS_COUNT,
@@ -55,43 +62,45 @@ const ItemViewContainerDiv = styled.div`
 const GameBoardView = () => {
   const {
     isStarted,
+    isStopped,
     isFinished,
-    shouldProceedNextRound,
     hasReachedGoalLine,
+    speedLevel,
     ongoingItems,
     doneItems,
   } = useAppSelector(selectGame);
   const dispatch = useAppDispatch();
-  const fieldRef = React.useRef<HTMLDivElement>(null);
-  const fallingItemContainerRef = React.useRef<HTMLDivElement>(null);
+  const fallingItemRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (fieldRef && fieldRef.current) {
-      fieldRef.current.focus();
-      console.log('focused it');
+    if (fallingItemRef && fallingItemRef.current) {
+      fallingItemRef.current.focus();
     }
   }, [ongoingItems]);
+
+  React.useEffect(() => {
+    if (hasReachedGoalLine) {
+      dispatch(saveCurrentRound());
+      dispatch(startNewRound());
+    }
+  }, [hasReachedGoalLine]);
 
   // Invoke movement for certain time interval
   // when items exist and they are yet to react the goal line.
   React.useEffect(() => {
-    if (ongoingItems && !hasReachedGoalLine) {
+    if (isStarted && !isStopped && !hasReachedGoalLine) {
       const timedMovement = setInterval(() => {
-        dispatch(move(MoveDirection.bottom));
-      }, 1000);
+        dispatch(autoMove(MoveDirection.bottom));
+      }, 1000 / speedLevel);
       return () => clearInterval(timedMovement);
     }
-  }, [ongoingItems, hasReachedGoalLine]);
-
-  React.useLayoutEffect(() => {
-    if (fallingItemContainerRef && fallingItemContainerRef.current) {
-      console.log('Width ' + fallingItemContainerRef.current.offsetWidth);
-      console.log('Height ' + fallingItemContainerRef.current.offsetHeight);
-      console.log('Left ' + fallingItemContainerRef.current.offsetLeft);
-    }
-  }, []);
+  }, [isStarted, isStopped, hasReachedGoalLine]);
 
   const handleMovement = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!ongoingItems || isStopped) {
+      return;
+    }
+
     switch (e.key) {
       case 'ArrowDown':
         if (!hasReachedGoalLine) {
@@ -99,12 +108,12 @@ const GameBoardView = () => {
         }
         break;
       case 'ArrowLeft':
-        if (ongoingItems!.human.cellPositionX > 1) {
+        if (ongoingItems.human.cellPositionX > 1) {
           return dispatch(move(MoveDirection.left));
         }
         break;
       case 'ArrowRight':
-        if (ongoingItems!.human.cellPositionX < HORIZONTAL_CELLS_COUNT) {
+        if (ongoingItems.human.cellPositionX < HORIZONTAL_CELLS_COUNT) {
           return dispatch(move(MoveDirection.right));
         }
         break;
@@ -113,20 +122,20 @@ const GameBoardView = () => {
     }
   };
 
+  // User should be able to have control when the board is clicked.
   const handleFocus = () => {
-    if (fieldRef && fieldRef.current) {
-      fieldRef.current.focus();
+    if (fallingItemRef && fallingItemRef.current) {
+      fallingItemRef.current.focus();
     }
   };
 
   return (
     <GameBoardDiv onClick={handleFocus}>
-      <ItemViewContainerDiv ref={fallingItemContainerRef}>
+      <ItemViewContainerDiv>
         {ongoingItems?.human && (
           // tabIndex is needed to receive key down events.
-          <span onKeyDown={handleMovement} ref={fieldRef} tabIndex={0}>
+          <span onKeyDown={handleMovement} ref={fallingItemRef} tabIndex={0}>
             <ItemView
-              id={ongoingItems.human.id}
               weight={ongoingItems.human.weight}
               scaleSize={ongoingItems.human.scaleSize}
               offsetX={ongoingItems.human.offsetX}
@@ -136,10 +145,9 @@ const GameBoardView = () => {
           </span>
         )}
       </ItemViewContainerDiv>
-      <ItemViewContainerDiv ref={fallingItemContainerRef}>
+      <ItemViewContainerDiv>
         {ongoingItems?.machine && (
           <ItemView
-            id={ongoingItems.machine.id}
             weight={ongoingItems.machine.weight}
             scaleSize={ongoingItems.machine.scaleSize}
             offsetX={ongoingItems.machine.offsetX}
@@ -149,7 +157,21 @@ const GameBoardView = () => {
         )}
       </ItemViewContainerDiv>
       <TotterBaseDiv>
-        <TotterLineDiv></TotterLineDiv>
+        <TotterLineDiv>
+          {doneItems?.human.map((d, idx) => (
+            <ItemView
+              // TODO(emrerdem1): You should consider having ID
+              //or something equivalent for sorting etc.
+              key={idx + d.offsetX + d.offsetY}
+              weight={d.weight}
+              scaleSize={d.scaleSize}
+              offsetX={d.offsetX}
+              offsetY={d.offsetY}
+              itemShape={d.itemShape}
+              isTr={true}
+            />
+          ))}
+        </TotterLineDiv>
         <TriangleDiv></TriangleDiv>
       </TotterBaseDiv>
     </GameBoardDiv>

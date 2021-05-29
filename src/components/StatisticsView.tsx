@@ -5,7 +5,7 @@ import { FallingItem, selectGame } from '../redux/reducer';
 
 const StatisticsContainerDiv = styled.div`
   display: flex;
-  width: 100%;
+  width: 50%;
   height: 100px;
   justify-content: space-between;
 `;
@@ -29,9 +29,11 @@ export const StatisticsView = () => {
   return (
     <StatisticsContainerDiv>
       <div>
+        <span>Humanity</span>
         <p>Total weight: {humanWeight}</p>
       </div>
       <div>
+        <span>Skynet</span>
         <p>Total weight: {machineWeight}</p>
       </div>
     </StatisticsContainerDiv>

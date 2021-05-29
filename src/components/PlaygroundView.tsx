@@ -7,7 +7,7 @@ const ScreenDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 700px;
-  height: 600px;
+  height: 400px;
   justify-content: center;
 `;
 

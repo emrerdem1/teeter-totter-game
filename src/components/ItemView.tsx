@@ -13,11 +13,12 @@ interface FallingItemContainerProps {
   offsetX: number;
   offsetY: number;
   scaleSize: number;
-  isRelative?: boolean;
+  // To affect the items whose falling is completed.
+  isInGoalLine?: boolean;
 }
 
 const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
-  position: ${(props) => `${props.isRelative ? 'relative' : 'absolute'}`};
+  position: ${(props) => `${props.isInGoalLine ? 'relative' : 'absolute'}`};
 
   top: ${(props) => `${props.offsetY}px`};
   left: ${(props) => `${props.offsetX}px`};
@@ -28,7 +29,7 @@ const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   width: ${MAX_ITEM_SIZE}px;
   height: ${MAX_ITEM_SIZE}px;
   transform: scale(${(props) => props.scaleSize});
-  display: ${(props) => `${props.isRelative ? 'inline-block' : 'flex'}`};
+  display: ${(props) => `${props.isInGoalLine ? 'inline-block' : 'flex'}`};
 `;
 
 const SquareItemDiv = styled.div`
@@ -61,13 +62,14 @@ const TriangleItemDiv = styled.div<{ scaleSize: number }>`
   }
 `;
 
-interface Deneme {
-  isTr?: boolean;
+interface FallingItemInGoalLine {
+  isInGoalLine?: boolean;
 }
 
 export const ItemView: React.FC<
-  Omit<FallingItem, 'cellPositionX' | 'cellPositionY' | 'unitTorque'> & Deneme
-> = ({ weight, scaleSize, offsetX, offsetY, itemShape, isTr }) => {
+  Omit<FallingItem, 'cellPositionX' | 'cellPositionY' | 'unitTorque'> &
+    FallingItemInGoalLine
+> = ({ weight, scaleSize, offsetX, offsetY, itemShape, isInGoalLine }) => {
   const weightIndicatorText = <span>{weight}</span>;
 
   const getItemDivBasedOnShape = (shape: FallingItemShape) => {
@@ -90,7 +92,7 @@ export const ItemView: React.FC<
       offsetX={offsetX}
       offsetY={offsetY}
       scaleSize={scaleSize}
-      isRelative={isTr}
+      isInGoalLine={isInGoalLine}
     >
       {getItemDivBasedOnShape(itemShape)}
     </FallingItemContainerDiv>

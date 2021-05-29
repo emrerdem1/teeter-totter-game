@@ -187,7 +187,7 @@ const GameBoardView = () => {
               offsetX={d.offsetX}
               offsetY={d.offsetY}
               itemShape={d.itemShape}
-              isTr={true}
+              isInGoalLine={true}
             />
           ))}
         </TotterLineDiv>

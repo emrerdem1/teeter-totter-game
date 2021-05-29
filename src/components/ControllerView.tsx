@@ -17,8 +17,7 @@ const ControllerContainer = styled.div`
 `;
 
 const ControlButton = styled.button`
-  width: 80px;
-  padding: 10px 15px;
+  padding: 12px 16px;
 `;
 
 export const ControllerView: React.FC = () => {

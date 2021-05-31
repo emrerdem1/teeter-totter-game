@@ -20,6 +20,7 @@ import {
   SPEED_INCREMENT_STEP,
   MAX_TORQUE,
   HORIZONTAL_CELLS_COUNT,
+  MAX_MASS_DIFFERENCE,
 } from './constants';
 
 const initialState: GameState = {
@@ -156,7 +157,7 @@ const gameSlice = createSlice({
       state.doneItems.machine.push(machineFellItem);
       state.ongoingItems = null;
       state.torque += calculatedTorque;
-      if (Math.abs(state.torque) >= MAX_TORQUE) {
+      if (Math.abs(state.torque) >= MAX_MASS_DIFFERENCE) {
         state.isStarted = false;
         state.isFinished = true;
         state.torque = MAX_TORQUE;

@@ -30,8 +30,9 @@ const GameBoardDiv = styled.div`
 `;
 
 const TotterBaseDiv = styled.div`
+  position: absolute;
+  height: 100%;
   width: 100%;
-  height: ${TOTTER_BALANCER_HEIGHT + TOTTER_LINE_HEIGHT}px;
   display: flex;
   flex-wrap: wrap;
   align-self: flex-end;
@@ -40,9 +41,26 @@ const TotterBaseDiv = styled.div`
 
 const TotterLineDiv = styled.div<{ torque: number }>`
   width: 100%;
-  height: ${TOTTER_LINE_HEIGHT}px;
-  background: red;
+  height: 100%;
   transform: rotate(${(props) => props.torque ?? '0'}deg);
+  transform-origin: bottom;
+  display: flex;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: ${TOTTER_LINE_HEIGHT}px;
+    background-color: red;
+  }
+`;
+
+const DoneItemsContainerDiv = styled.div`
+  width: 50%;
+  height: 100%;
+  position: relative;
 `;
 
 const TriangleDiv = styled.div`
@@ -179,20 +197,38 @@ const GameBoardView = () => {
       </ItemViewContainerDiv>
       <TotterBaseDiv>
         <TotterLineDiv torque={torque}>
-          {doneItems?.human.map((d, idx) => (
-            <ItemView
-              // TODO(emrerdem1): You should consider having ID
-              //or something equivalent for sorting etc.
-              key={idx + d.offsetX + d.offsetY}
-              weight={d.weight}
-              scaleSize={d.scaleSize}
-              offsetX={d.offsetX}
-              offsetY={d.offsetY}
-              itemShape={d.itemShape}
-              itemColor={d.itemColor}
-              isInGoalLine={true}
-            />
-          ))}
+          <DoneItemsContainerDiv>
+            {doneItems?.human.map((d, idx) => (
+              <ItemView
+                // TODO(emrerdem1): You should consider having ID
+                //or something equivalent for sorting etc.
+                key={idx + d.offsetX + d.offsetY}
+                weight={d.weight}
+                scaleSize={d.scaleSize}
+                offsetX={d.offsetX}
+                offsetY={d.offsetY}
+                itemShape={d.itemShape}
+                itemColor={d.itemColor}
+                hasReachedGoalLine={true}
+              />
+            ))}
+          </DoneItemsContainerDiv>
+          <DoneItemsContainerDiv>
+            {doneItems?.machine.map((d, idx) => (
+              <ItemView
+                // TODO(emrerdem1): You should consider having ID
+                //or something equivalent for sorting etc.
+                key={idx + d.offsetX + d.offsetY}
+                weight={d.weight}
+                scaleSize={d.scaleSize}
+                offsetX={d.offsetX}
+                offsetY={d.offsetY}
+                itemShape={d.itemShape}
+                itemColor={d.itemColor}
+                hasReachedGoalLine={true}
+              />
+            ))}
+          </DoneItemsContainerDiv>
         </TotterLineDiv>
         <TriangleDiv></TriangleDiv>
       </TotterBaseDiv>

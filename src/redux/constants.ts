@@ -4,6 +4,7 @@ export const SCALE_AMOUNT = 0.05;
 export const MAX_ITEM_SIZE = 40;
 export const MAX_ITEM_WEIGHT = 10;
 export const MAX_TORQUE = 30;
+export const MAX_MASS_DIFFERENCE = 20;
 
 export const SPEED_INCREMENT_STEP = 0.5;
 

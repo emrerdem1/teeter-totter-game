@@ -8,12 +8,14 @@ interface FallingItemContainerProps {
   offsetY: number;
   scaleSize: number;
   // To affect the items whose falling is completed.
-  isInGoalLine?: boolean;
+  hasReachedGoalLine?: boolean;
 }
 
 const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
-  position: ${(props) => `${props.isInGoalLine ? 'relative' : 'absolute'}`};
-  top: ${(props) => `${props.offsetY}px`};
+  position: absolute;
+  top: ${(props) =>
+    props.hasReachedGoalLine ? 'unset' : `${props.offsetY}px`};
+  bottom: ${(props) => `${props.hasReachedGoalLine ? '0' : 'unset'}`};
   left: ${(props) => `${props.offsetX}px`};
   color: white;
   display: flex;
@@ -22,7 +24,6 @@ const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   width: ${MAX_ITEM_SIZE}px;
   height: ${MAX_ITEM_SIZE}px;
   transform: scale(${(props) => props.scaleSize});
-  display: ${(props) => `${props.isInGoalLine ? 'inline-block' : 'flex'}`};
 `;
 
 const SquareItemDiv = styled.div<{ itemColor: string }>`
@@ -56,7 +57,7 @@ const TriangleItemDiv = styled.div<{ itemColor: string }>`
 `;
 
 interface FallingItemInGoalLine {
-  isInGoalLine?: boolean;
+  hasReachedGoalLine?: boolean;
 }
 
 export const ItemView: React.FC<
@@ -69,7 +70,7 @@ export const ItemView: React.FC<
   offsetY,
   itemShape,
   itemColor,
-  isInGoalLine,
+  hasReachedGoalLine,
 }) => {
   const weightIndicatorText = <span>{weight}</span>;
 
@@ -101,7 +102,7 @@ export const ItemView: React.FC<
       offsetX={offsetX}
       offsetY={offsetY}
       scaleSize={scaleSize}
-      isInGoalLine={isInGoalLine}
+      hasReachedGoalLine={hasReachedGoalLine}
     >
       {getItemDivBasedOnShape(itemShape)}
     </FallingItemContainerDiv>

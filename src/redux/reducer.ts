@@ -18,7 +18,6 @@ import {
   VERTICAL_CELLS_COUNT,
   DEFAULT_SPEED_LEVEL,
   SPEED_INCREMENT_STEP,
-  MAX_TORQUE,
   HORIZONTAL_CELLS_COUNT,
   MAX_MASS_DIFFERENCE,
 } from './constants';
@@ -160,7 +159,6 @@ const gameSlice = createSlice({
       if (Math.abs(state.torque) >= MAX_MASS_DIFFERENCE) {
         state.isStarted = false;
         state.isFinished = true;
-        state.torque = MAX_TORQUE;
       }
     },
     toggleCurrentGameFlow: (state) => {

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { FallingItem, FallingItemShape } from '../redux/types';
-import { MAX_ITEM_SIZE } from '../redux/constants';
+import { CELL_UNIT_SIZE } from '../redux/constants';
+
+const MIN_WEIGHT_TEXT_SIZE = 28;
 
 interface FallingItemContainerProps {
   offsetX: number;
@@ -21,8 +23,8 @@ const FallingItemContainerDiv = styled.div<FallingItemContainerProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${MAX_ITEM_SIZE}px;
-  height: ${MAX_ITEM_SIZE}px;
+  width: ${CELL_UNIT_SIZE}px;
+  height: ${CELL_UNIT_SIZE}px;
   transform: scale(${(props) => props.scaleSize});
 `;
 
@@ -33,6 +35,7 @@ const SquareItemDiv = styled.div<{ itemColor: string }>`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => `${props.itemColor}`};
+  font-size: ${MIN_WEIGHT_TEXT_SIZE}px;
 `;
 
 const CircleItemDiv = styled(SquareItemDiv)`
@@ -42,9 +45,10 @@ const CircleItemDiv = styled(SquareItemDiv)`
 const TriangleItemDiv = styled.div<{ itemColor: string }>`
   width: 0;
   height: 0;
-  border-left: ${MAX_ITEM_SIZE / 2}px solid transparent;
-  border-right: ${MAX_ITEM_SIZE / 2}px solid transparent;
-  border-bottom: ${MAX_ITEM_SIZE}px solid ${(props) => props.itemColor};
+  border-left: ${CELL_UNIT_SIZE / 2}px solid transparent;
+  border-right: ${CELL_UNIT_SIZE / 2}px solid transparent;
+  border-bottom: ${CELL_UNIT_SIZE}px solid ${(props) => props.itemColor};
+  font-size: ${MIN_WEIGHT_TEXT_SIZE}px;
 
   span {
     position: absolute;

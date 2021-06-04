@@ -1,9 +1,9 @@
 import {
   MAX_ITEM_WEIGHT,
-  MAX_ITEM_SIZE,
   HORIZONTAL_CELLS_COUNT,
   SCALE_AMOUNT,
   BASE_SCALE,
+  CELL_UNIT_SIZE,
 } from './constants';
 import { FallingItemShape, MoveDirection } from './types';
 
@@ -19,7 +19,7 @@ export const calculateOffset = (cellPosition: number): number => {
   // 0 is exclusive given that we want to multiple the position
   // by the weight to calculate the momentum. So we need to exclude
   // the cell's own size to get accurate coordinate.
-  return MAX_ITEM_SIZE * cellPosition - MAX_ITEM_SIZE;
+  return CELL_UNIT_SIZE * cellPosition - CELL_UNIT_SIZE;
 };
 
 export const getRandomCellPositionX = (): number => {

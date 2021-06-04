@@ -1,7 +1,7 @@
 export const BASE_SCALE = 0.5;
 export const SCALE_AMOUNT = 0.05;
 
-export const MAX_ITEM_SIZE = 40;
+export const CELL_UNIT_SIZE = 70;
 export const MAX_ITEM_WEIGHT = 10;
 export const MAX_TORQUE = 30;
 export const MAX_MASS_DIFFERENCE = 20;

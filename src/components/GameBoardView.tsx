@@ -12,13 +12,13 @@ import { MoveDirection } from '../redux/types';
 import {
   HORIZONTAL_CELLS_COUNT,
   VERTICAL_CELLS_COUNT,
-  MAX_ITEM_SIZE,
+  CELL_UNIT_SIZE,
 } from '../redux/constants';
 import ItemView from './ItemView';
 import BalancerView from './BalancerView';
 
-const BOARD_WIDTH = MAX_ITEM_SIZE * HORIZONTAL_CELLS_COUNT * 2;
-const BOARD_HEIGHT = MAX_ITEM_SIZE * VERTICAL_CELLS_COUNT;
+const BOARD_WIDTH = CELL_UNIT_SIZE * HORIZONTAL_CELLS_COUNT * 2;
+const BOARD_HEIGHT = CELL_UNIT_SIZE * VERTICAL_CELLS_COUNT;
 
 const GameBoardDiv = styled.div`
   width: ${BOARD_WIDTH}px;

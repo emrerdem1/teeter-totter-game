@@ -5,13 +5,13 @@ import ControllerView from './components/ControllerView';
 import { PlaygroundView } from './components/PlaygroundView';
 
 const App: React.FC = () => {
-  return (
-    <>
-      <ControllerView />
-      <PlaygroundView />
-      <ContactView />
-    </>
-  );
-}
+    return (
+        <>
+            <ControllerView />
+            <PlaygroundView />
+            <ContactView />
+        </>
+    );
+};
 
 export default App;

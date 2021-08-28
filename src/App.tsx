@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.scss';
+import ContactView from './components/ContactView';
 import ControllerView from './components/ControllerView';
 import { PlaygroundView } from './components/PlaygroundView';
 
-function App() {
+const App: React.FC = () => {
   return (
     <>
       <ControllerView />
       <PlaygroundView />
+      <ContactView />
     </>
   );
 }

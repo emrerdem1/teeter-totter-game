@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const ExternalLinks = {
-    LINKEDIN: 'https://www.linkedin.com/in/emrerdem94/',
-    GITHUB: 'https://github.com/emrerdem1/teeter-totter-game',
-};
+enum ExternalLinks {
+    LINKEDIN = 'https://www.linkedin.com/in/emrerdem94/',
+    GITHUB = 'https://github.com/emrerdem1/teeter-totter-game',
+}
 
 const ContactContainer = styled.div`
     width: 100%;

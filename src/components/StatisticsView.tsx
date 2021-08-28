@@ -11,9 +11,8 @@ const StatisticsContainerDiv = styled.div`
     justify-content: space-between;
 `;
 
-const getTotalWeightPerSide = (fallingList: FallingItem[]) => {
-    return fallingList.map((item) => item.unitTorque).reduce((acc, curr) => acc + curr);
-};
+const getTotalWeightPerSide = (fallingList: FallingItem[]) =>
+    fallingList.map((item) => item.unitTorque).reduce((acc, curr) => acc + curr);
 
 export const StatisticsView: React.FC = () => {
     const { doneItems } = useAppSelector(selectGame);

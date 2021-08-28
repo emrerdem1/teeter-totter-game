@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { move, autoMove, selectGame, startNewRound, saveCurrentRound } from '../redux/reducer';
 import { MoveDirection } from '../redux/types';
@@ -46,22 +46,24 @@ const GameBoardView: React.FC = () => {
     const dispatch = useAppDispatch();
     const fallingItemRef = React.useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (fallingItemRef && fallingItemRef.current) {
             fallingItemRef.current.focus();
         }
     }, [ongoingItems]);
 
-    React.useEffect(() => {
-        if (hasReachedGoalLine) {
-            dispatch(saveCurrentRound());
-            dispatch(startNewRound());
+    useEffect(() => {
+        if (!hasReachedGoalLine) {
+            return;
         }
+
+        dispatch(saveCurrentRound());
+        dispatch(startNewRound());
     }, [hasReachedGoalLine, dispatch]);
 
     // Invoke movement for certain time interval
     // when items exist and they are yet to react the goal line.
-    React.useEffect(() => {
+    useEffect(() => {
         if (isStarted && !isStopped && !hasReachedGoalLine) {
             const timedMovement = setInterval(() => {
                 dispatch(autoMove(MoveDirection.bottom));

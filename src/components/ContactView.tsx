@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 import styled from '@emotion/styled';
 
 const ExternalLinks = {
     LINKEDIN: 'https://www.linkedin.com/in/emrerdem94/',
-    GITHUB: 'https://github.com/emrerdem1/teeter-totter-game'
-}
+    GITHUB: 'https://github.com/emrerdem1/teeter-totter-game',
+};
 
 const ContactContainer = styled.div`
     width: 100%;
@@ -31,14 +31,14 @@ const ContactContainer = styled.div`
 const ContactView: React.FC = () => {
     return (
         <ContactContainer>
-            <a href={ExternalLinks.GITHUB} rel="noopener noreferrer" target='_blank' >
+            <a href={ExternalLinks.GITHUB} rel="noopener noreferrer" target="_blank">
                 <img src="/github.svg" alt="github icon" />
             </a>
-            <a href={ExternalLinks.LINKEDIN} rel="noopener noreferrer" target='_blank' >
+            <a href={ExternalLinks.LINKEDIN} rel="noopener noreferrer" target="_blank">
                 <img src="/linkedin.svg" alt="linkedin icon" />
             </a>
         </ContactContainer>
-    )
-}
+    );
+};
 
-export default ContactView
+export default ContactView;

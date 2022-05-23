@@ -6,7 +6,7 @@ export const MAX_ITEM_WEIGHT = 10;
 export const MAX_TORQUE = 30;
 export const MAX_MASS_DIFFERENCE = 20;
 
-export const SPEED_INCREMENT_STEP = 0.5;
+export const SPEED_INCREMENT_STEP = 0.25;
 
 export const HORIZONTAL_CELLS_COUNT = 5;
 export const VERTICAL_CELLS_COUNT = 7;

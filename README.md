@@ -8,7 +8,7 @@ falling from top to bottom. According to weight on the sides, the teeter totter
 will be bending towards the heavy side.
 
 ● You will be managing those object's placement by arrow keys to keep the teeter
-totter on balance.
+totter on balance
 
 ● Your task is, keeping this balance as much as you can.
 
@@ -41,7 +41,7 @@ keep the teeter totter on balance.
 ● There will be a pause and continue feature. The simulation can be paused and
 can be resumed in the last paused state.
 
-● Vuex store usage expected. Component design expected.
+● Redux store usage expected. Component design expected.
 
 ● You can use any color or styling.
 

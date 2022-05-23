@@ -4,20 +4,19 @@ import StatisticsView from './StatisticsView';
 import GameBoardView from './GameBoardView';
 
 const ScreenDiv = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    width: 700px;
-    height: 400px;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 700px;
 `;
 
 export const PlaygroundView: React.FC = () => {
-    return (
-        <ScreenDiv>
-            <StatisticsView />
-            <GameBoardView />
-        </ScreenDiv>
-    );
+  return (
+    <ScreenDiv>
+      <StatisticsView />
+      <GameBoardView />
+    </ScreenDiv>
+  );
 };
 
 export default PlaygroundView;

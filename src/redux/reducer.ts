@@ -76,8 +76,9 @@ const gameSlice = createSlice({
       };
     },
     move: (state, action: PayloadAction<MoveDirection>) => {
-      const { human, machine } = state.ongoingItems!;
+      if (!state.ongoingItems) return;
 
+      const { human, machine } = state.ongoingItems;
       const possibleNewHumanCellPositionX = getHorizontalPositionAfterMove(human.cellPositionX, action.payload);
       const possibleNewCellPositionY = getVerticalPositionAfterMove(human.cellPositionY, action.payload);
       const mutualVerticalOffset = calculateOffset(possibleNewCellPositionY);
@@ -104,8 +105,9 @@ const gameSlice = createSlice({
       state.hasReachedGoalLine = possibleNewCellPositionY === VERTICAL_CELLS_COUNT;
     },
     autoMove: (state, action: PayloadAction<MoveDirection>) => {
-      const { human, machine } = state.ongoingItems!;
+      if (!state.ongoingItems) return;
 
+      const { human, machine } = state.ongoingItems;
       const possibleNewCellPositionY = getVerticalPositionAfterMove(human.cellPositionY, action.payload);
       // Auto move can only affect the vertical position for now.
       // TODO(emrerdem1): You should implement logical calculations
@@ -127,10 +129,12 @@ const gameSlice = createSlice({
       state.hasReachedGoalLine = possibleNewCellPositionY === VERTICAL_CELLS_COUNT;
     },
     saveCurrentRound: (state) => {
+      if (!state.ongoingItems) return;
+
       state.speedLevel += SPEED_INCREMENT_STEP;
       state.hasReachedGoalLine = false;
 
-      const { human: humanFellItem, machine: machineFellItem } = state.ongoingItems!;
+      const { human: humanFellItem, machine: machineFellItem } = state.ongoingItems;
       const calculatedTorque = (humanFellItem.unitTorque - machineFellItem.unitTorque) * -1;
 
       state.doneItems.human.push(humanFellItem);

@@ -7,7 +7,8 @@ import { FallingItem } from '../redux/types';
 const StatisticsContainerDiv = styled.div`
   display: flex;
   width: 50%;
-  height: 100px;
+  height: 60px;
+  margin-bottom: 10px;
   justify-content: space-between;
 `;
 

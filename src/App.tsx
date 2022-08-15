@@ -10,11 +10,11 @@ const InformationContainerDiv = styled.div`
 `;
 
 const AppContainerDiv = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
-  padding: 50px 0 200px;
+  padding: 20px 0 0;
 `;
 
 const App: React.FC = () => {
